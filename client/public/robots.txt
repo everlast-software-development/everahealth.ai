@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://everahealth.ai/sitemap.xml

@@ -1,0 +1,113 @@
+/* ==========================================================
+   Evera hero — particle intro, centred portrait video, headline, chat dock.
+   DM Sans for everything but the Anton title. No borders, no mouse effects.
+   ========================================================== */
+/* (.f-sec.ev-hero: must beat site.css's .f-sec background, which loads after this file) */
+html.is-f .f-sec.ev-hero { background: #07021a; font-family: 'DM Sans', system-ui, sans-serif; }
+
+/* the video and the particle canvas share one box, so the cover maths match */
+html.is-f .ev-hero__stage { position: absolute; inset: 0; overflow: hidden; }
+html.is-f .ev-hero__video, html.is-f .ev-hero__canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+html.is-f .ev-hero__video { object-fit: cover; object-position: 50% 24%; opacity: 0; --rv: 0px; --band: 90px; --fx: 50%; --fy: 30%; }
+html.is-f .ev-hero__canvas { pointer-events: none; }
+/* the reveal wave: the paused video shows through a circle growing from her face */
+html.is-f .ev-hero.is-reveal .ev-hero__video {
+  opacity: 1;
+  -webkit-mask-image: radial-gradient(circle at var(--fx) var(--fy), #000 calc(var(--rv) - var(--band)), transparent var(--rv));
+  mask-image: radial-gradient(circle at var(--fx) var(--fy), #000 calc(var(--rv) - var(--band)), transparent var(--rv));
+}
+html.is-f .ev-hero.is-live .ev-hero__video { opacity: 1; -webkit-mask-image: none; mask-image: none; }
+
+/* shade: darker on the left for the headline and at the bottom for the chat */
+html.is-f .h-pa__shade { position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(7,2,26,.86) 0%, rgba(7,2,26,.5) 28%, rgba(7,2,26,0) 52%),
+    linear-gradient(to top, rgba(7,2,26,.8) 0%, rgba(7,2,26,0) 32%),
+    linear-gradient(to bottom, rgba(7,2,26,.5) 0%, rgba(7,2,26,0) 18%); }
+
+/* ---------- headline ---------- */
+html.is-f .ev-head { position: absolute; z-index: 3; left: clamp(70px, 7vw, 130px); top: 46%; translate: 0 -50%; max-width: min(640px, 44vw); }   /* the section gutter */
+/* badge "Welcome to Evera AI": the DNA mark turning in 3D, then two words rising from their masks */
+html.is-f .ev-hi { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 22px; perspective: 400px; font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.3; }
+html.is-f .ev-hi__dna { display: block; flex: none; height: 32px; transform-style: preserve-3d; opacity: 0; transform: scale(.6) rotateY(-90deg); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+html.is-f .ev-hi.is-in .ev-hi__dna { opacity: 1; transform: none; }
+html.is-f .ev-hi__dna img { display: block; height: 32px; width: auto; animation: evHiTurn 7s linear infinite; }
+@keyframes evHiTurn { to { transform: rotateY(360deg); } }
+html.is-f .ev-hi__t { white-space: nowrap; }
+html.is-f .ev-hi__w { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .12em; margin-bottom: -.12em; }
+html.is-f .ev-hi__w > * { display: inline-block; font-style: normal; transform: translateY(110%); transition: transform .9s var(--ease); }
+html.is-f .ev-hi.is-in .ev-hi__w > * { transform: none; }
+html.is-f .ev-hi.is-in .ev-hi__w:first-child > * { transition-delay: .2s; }
+html.is-f .ev-hi.is-in .ev-hi__w:last-child > * { transition-delay: .32s; }
+html.is-f .ev-hi:not(.is-in) .ev-hi__dna, html.is-f .ev-hi:not(.is-in) .ev-hi__w > * { transition: none; }   /* reset instantly so it replays */
+html.is-f .ev-hi em { font-weight: 500; color: rgba(255,255,255,.8); }
+html.is-f .ev-hi b { font-weight: 600; background: linear-gradient(90deg, #cae751, #bcacff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+html.is-f .ev-title { margin: 0; font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(48px, min(4.4vw, 8.4vh), 90px); line-height: .94; color: #fff; }
+html.is-f .ev-title .f-mask { white-space: nowrap; }
+html.is-f .ev-grad { display: inline-block; background: linear-gradient(90deg, #cae751 12%, #bcacff 62%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+html.is-f .ev-lede { margin: 22px 0 30px; max-width: 40ch; font-size: clamp(15px, 1.05vw, 17px); line-height: 1.65; color: rgba(255,255,255,.75); }
+html.is-f .ev-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 24px; border: 0; border-radius: 999px; background: #cae751; color: #120830;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform .3s var(--ease); }
+html.is-f .ev-btn svg { width: 18px; height: 18px; transition: transform .3s var(--ease); }
+html.is-f .ev-btn:hover { transform: translateY(-2px); }
+html.is-f .ev-btn:hover svg { transform: translate(2px, -2px); }
+html.is-f .ev-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* ---------- chat dock, bottom centre under Evera ---------- */
+html.is-f .ev-dock { position: absolute; z-index: 3; left: 50%; translate: -50% 0; bottom: 36px; width: min(580px, calc(100% - 40px)); display: flex; flex-direction: column; gap: 10px; font-family: 'DM Sans', sans-serif; }
+html.is-f .h-pa__card { padding: 16px 18px 18px; border-radius: 20px; background: rgba(14,8,40,.48); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 30px 60px -30px rgba(0,0,0,.8); }
+html.is-f .h-pa__who { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 13px; font-weight: 600; color: #fff; }
+html.is-f .h-pa__who > i { width: 7px; height: 7px; border-radius: 50%; background: #cae751; box-shadow: 0 0 8px #cae751; }
+html.is-f .h-pa__who > span:not(.f-ec__wave) { font-size: 11.5px; font-weight: 500; color: rgba(255,255,255,.5); }
+html.is-f .h-listen { display: grid; place-items: center; flex: none; width: 26px; height: 26px; margin-left: 4px; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; transition: background .25s, color .25s; }
+html.is-f .h-listen svg { width: 12px; height: 12px; }
+html.is-f .h-listen:hover:not(:disabled), html.is-f .h-listen.is-on { background: #cae751; color: #120830; }
+html.is-f .h-listen:disabled { opacity: .45; cursor: default; }
+html.is-f .h-listen:focus-visible { outline: 2px solid #cae751; outline-offset: 2px; }
+/* talking indicator: five lime dots that stretch into bars while Evera types or speaks */
+html.is-f .f-ec__wave { display: flex; align-items: center; gap: 3px; height: 14px; margin-left: auto; }
+html.is-f .f-ec__wave i { width: 2px; height: 4px; border-radius: 2px; background: #cae751; }
+html.is-f .f-ec__wave i:nth-child(2) { animation-delay: .09s; } html.is-f .f-ec__wave i:nth-child(3) { animation-delay: .18s; }
+html.is-f .f-ec__wave i:nth-child(4) { animation-delay: .27s; } html.is-f .f-ec__wave i:nth-child(5) { animation-delay: .36s; }
+html.is-f .f-ec__wave.is-on i { animation-name: fWv; animation-duration: .8s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+@keyframes fWv { 0%, 100% { height: 4px; } 50% { height: 18px; } }
+html.is-f .h-pa__q { display: inline-block; margin: 0 0 8px; padding: 4px 10px; border-radius: 999px; background: rgba(202,231,81,.14); color: #cae751; font-size: 12px; font-weight: 600; }
+html.is-f .h-pa__text { margin: 0; min-height: 4.5em; font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,.88); }
+html.is-f .h-think { display: inline-flex; gap: 5px; padding-top: 7px; color: rgba(255,255,255,.7); }
+html.is-f .h-think i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: hThink 1s ease-in-out infinite; }
+html.is-f .h-think i:nth-child(2) { animation-delay: .15s; } html.is-f .h-think i:nth-child(3) { animation-delay: .3s; }
+@keyframes hThink { 0%, 100% { opacity: .25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+html.is-f .h-caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -.15em; background: #cae751; animation: hCaret 1s steps(1) infinite; }
+@keyframes hCaret { 50% { opacity: 0; } }
+html.is-f .h-pa__chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 30px; }
+html.is-f .h-pa__chip { padding: 7px 12px; border: 0; border-radius: 999px; background: rgba(255,255,255,.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  color: rgba(255,255,255,.85); font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 500; cursor: pointer; transition: background .25s, color .25s; }
+html.is-f .h-pa__chip:hover { background: rgba(255,255,255,.16); color: #fff; }
+html.is-f .h-pa__chip:focus-visible { outline: 2px solid #cae751; outline-offset: 2px; }
+
+/* ---------- shorter or narrower desktops: the chat moves bottom right ---------- */
+@media (min-width: 861px) and (max-height: 800px), (min-width: 861px) and (max-width: 1300px) {
+  html.is-f .ev-dock { left: auto; right: clamp(56px, 5.5vw, 110px); translate: none; width: min(460px, 40vw); }
+  html.is-f .h-pa__chips { justify-content: flex-start; }
+  html.is-f .ev-title { font-size: clamp(42px, min(4.2vw, 8vh), 80px); }
+}
+
+/* ---------- phones: portrait on top, then headline and chat in normal flow ---------- */
+@media (max-width: 860px) {
+  html.is-f .ev-hero.is-m { position: relative; inset: auto; min-height: 0; overflow: hidden; }
+  html.is-f .ev-hero.is-m .ev-hero__stage { inset: 0 0 auto; height: 74svh; -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent); mask-image: linear-gradient(to bottom, #000 60%, transparent); }
+  html.is-f .ev-hero.is-m .h-pa__shade { inset: 0 0 auto; height: 74svh; background: linear-gradient(to top, #07021a 0%, rgba(7,2,26,0) 42%), linear-gradient(to bottom, rgba(7,2,26,.55) 0%, rgba(7,2,26,0) 20%); }
+  html.is-f .ev-hero.is-m .ev-hero__video { object-position: 50% 14%; }
+  html.is-f .ev-hero.is-m .ev-head { position: relative; left: auto; top: auto; translate: none; max-width: none; padding: 52svh 16px 0; }
+  html.is-f .ev-hero.is-m .ev-title { font-size: clamp(40px, 12vw, 56px); }
+  html.is-f .ev-hi { font-size: 14px; }
+  html.is-f .ev-hero.is-m .ev-dock { position: relative; left: auto; bottom: auto; translate: none; width: auto; padding: 26px 16px 84px; }
+  html.is-f .ev-hero.is-m .h-pa__chips { justify-content: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-f .f-ec__wave.is-on i, html.is-f .h-think i, html.is-f .h-caret { animation: none; }
+  html.is-f .ev-btn, html.is-f .ev-btn svg { transition: none; }
+  html.is-f .ev-hi__dna img { animation: none; }
+  html.is-f .ev-hi__dna, html.is-f .ev-hi__w > * { transition: none !important; opacity: 1; transform: none; }
+}

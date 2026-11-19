@@ -1,0 +1,95 @@
+/* ==========================================================
+   Evera header (EveraHeader.jsx): logo left, two matching pills right, on the
+   section gutter clamp(70px, 7vw, 130px); a full-screen menu that grows from the
+   Menu button as a circle. The header (.f-nav) stays above the menu.
+   ========================================================== */
+html.is-f .f-nav.ev-nav { display: block; z-index: 60; padding: 0; gap: 0; }
+html.is-f .ev-nav > .ev-nav__bar { position: relative; z-index: 2; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between;
+  height: calc(88px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) clamp(70px, 7vw, 130px) 0; pointer-events: none; }
+html.is-f .ev-nav__bar > * { pointer-events: auto; }
+html.is-f .ev-nav__logo { padding: 0; border: 0; background: none; cursor: pointer; transition: opacity .3s var(--ease); }
+html.is-f .ev-nav__logo img { display: block; height: 30px; width: auto; filter: brightness(0) invert(1); }
+html.is-f .ev-nav__logo:hover { opacity: .8; }
+html.is-f .ev-nav__logo:focus-visible { outline: 2px solid #cae751; outline-offset: 6px; border-radius: 4px; }
+html.is-f .ev-nav__acts { display: flex; gap: 10px; }
+
+/* the two pills: same shape and size, white / navy at rest, lime only on interaction */
+html.is-f .ev-pillbtn { display: inline-flex; align-items: center; gap: 12px; height: 46px; padding: 0 6px 0 20px; border: 0; border-radius: 999px;
+  font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .4s var(--ease), color .4s var(--ease); }
+html.is-f .ev-pillbtn:focus-visible { outline: 2px solid #cae751; outline-offset: 3px; }
+html.is-f .ev-pillbtn__ic { position: relative; display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 50%; transition: background .4s var(--ease), transform .5s var(--ease); }
+html.is-f .ev-pillbtn--join { background: #fff; color: #120830; }
+html.is-f .ev-pillbtn--join:hover { background: #cae751; }
+html.is-f .ev-pillbtn--join .ev-pillbtn__ic { background: #120830; color: #fff; }
+html.is-f .ev-pillbtn--join .ev-pillbtn__ic svg { width: 15px; height: 15px; transition: transform .5s var(--ease), color .3s; }
+html.is-f .ev-pillbtn--join:hover .ev-pillbtn__ic svg { color: #cae751; transform: rotate(45deg); }
+html.is-f .ev-pillbtn--menu { background: rgba(255,255,255,.1); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: #fff; }
+html.is-f .ev-pillbtn--menu:hover { background: rgba(255,255,255,.16); }
+html.is-f .ev-pillbtn--menu .ev-pillbtn__ic { background: #fff; }
+html.is-f .ev-pillbtn--menu:hover .ev-pillbtn__ic, html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic { background: #cae751; }
+/* two short navy lines; the lower one is shorter and grows on hover; open: the circle turns and the lines cross into an × */
+html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i { position: absolute; left: 10px; height: 1.6px; border-radius: 2px; background: #120830; transition: width .4s var(--ease), top .45s var(--ease), transform .45s var(--ease); }
+html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:first-child { top: 13.5px; width: 14px; }
+html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:last-child { top: 18.5px; width: 9px; }
+html.is-f .ev-pillbtn--menu:hover .ev-pillbtn__ic i:last-child { width: 14px; }
+html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic { transform: rotate(90deg); }
+html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:first-child { top: 16px; width: 14px; transform: rotate(45deg); }
+html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:last-child { top: 16px; width: 14px; transform: rotate(-45deg); }
+/* text roll: two stacked copies; on hover the first slides up and out, the second slides in */
+html.is-f .ev-roll { display: block; overflow: hidden; height: 1.3em; line-height: 1.3em; }
+html.is-f .ev-roll > span { display: block; transition: transform .5s var(--ease); }
+html.is-f .ev-pillbtn:hover .ev-roll > span, html.is-f .ev-pillbtn:focus-visible .ev-roll > span { transform: translateY(-100%); }
+
+/* ---------- full-screen menu ---------- */
+html.is-f .ev-menu { position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: auto;
+  background: radial-gradient(60% 55% at 88% 92%, rgba(146,89,255,.26), rgba(146,89,255,0) 70%), radial-gradient(55% 50% at 8% 6%, rgba(86,25,204,.3), rgba(86,25,204,0) 70%), #07021a; }
+html.is-f .ev-menu__grid { box-sizing: border-box; height: 100%; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: clamp(40px, 5vw, 90px);
+  padding: 110px clamp(70px, 7vw, 130px) clamp(36px, 6vh, 70px); }
+html.is-f .ev-menu__grid > nav { align-self: center; min-width: 0; }
+html.is-f .ev-menu__list { margin: 0; padding: 0; list-style: none; }
+html.is-f .ev-menu__mask { display: block; overflow: hidden; padding-right: 32px; }
+html.is-f .ev-menu__item { display: flex; align-items: flex-start; width: auto; padding: 0; border: 0; background: none; color: #fff; text-align: left; cursor: pointer; transition: opacity .35s var(--ease); }
+html.is-f .ev-menu__num { position: relative; min-width: 2.2em; padding-top: .9em; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: rgba(255,255,255,.4); transition: color .3s; }
+html.is-f .ev-menu__item.is-cur .ev-menu__num { color: #cae751; }
+html.is-f .ev-menu__item.is-cur .ev-menu__num::after { content: ''; position: absolute; left: 0; top: calc(.9em + 20px); width: 5px; height: 5px; border-radius: 50%; background: #cae751; box-shadow: 0 0 8px #cae751; }
+html.is-f .ev-menu__title { display: inline-block; font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(38px, min(7.4vh, 5.6vw), 82px); line-height: 1.02; transition: transform .5s var(--ease); }
+html.is-f .ev-menu__list.has-hover .ev-menu__item:not(.is-hover) { opacity: .28; }
+html.is-f .ev-menu__item.is-hover .ev-menu__title { transform: translateX(14px); background: linear-gradient(90deg, #cae751 15%, #bcacff 70%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+html.is-f .ev-menu__item:focus-visible { outline: none; }
+html.is-f .ev-menu__item:focus-visible .ev-menu__title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; text-decoration-color: #cae751; }
+html.is-f .ev-menu__side { align-self: end; justify-self: end; width: 100%; max-width: 380px; }
+html.is-f .ev-menu__label { margin: 0 0 12px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #cae751; }
+html.is-f .ev-menu__text { margin: 0; min-height: 2.9em; font-family: 'DM Sans', sans-serif; font-size: clamp(18px, 1.5vw, 22px); line-height: 1.4; color: rgba(255,255,255,.85); }
+html.is-f .ev-menu__join { display: inline-flex; align-items: center; gap: 10px; margin-top: 26px; padding: 16px 24px; border: 0; border-radius: 999px; background: #cae751; color: #120830;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform .3s var(--ease); }
+html.is-f .ev-menu__join svg { width: 18px; height: 18px; }
+html.is-f .ev-menu__join:hover { transform: translateY(-2px); }
+html.is-f .ev-menu__join:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* ---------- phones ---------- */
+@media (max-width: 860px) {
+  html.is-f .ev-nav > .ev-nav__bar { height: calc(70px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 18px 0; }
+  html.is-f .ev-nav__logo img { height: 22px; }
+  html.is-f .ev-pillbtn--join { display: none; }          /* it lives in the menu on phones */
+  html.is-f .ev-pillbtn { height: 42px; padding: 0 5px 0 18px; }
+  html.is-f .ev-pillbtn__ic { width: 32px; height: 32px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i { left: 9px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:first-child { top: 12.5px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:last-child { top: 17.5px; }
+  html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:first-child, html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:last-child { top: 15px; }
+  html.is-f .ev-menu__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; row-gap: 24px; padding: 96px 18px calc(28px + env(safe-area-inset-bottom, 0px)); }
+  html.is-f .ev-menu__title { font-size: clamp(36px, 10.5vw, 52px); }
+  html.is-f .ev-menu__num { padding-top: .7em; }
+  html.is-f .ev-menu__item.is-cur .ev-menu__num::after { top: calc(.7em + 18px); }
+  html.is-f .ev-menu__side { justify-self: stretch; max-width: none; }
+  html.is-f .ev-menu__text { min-height: 0; font-size: 17px; }
+  html.is-f .ev-menu__join { margin-top: 18px; }
+}
+
+/* reduced motion: the menu still opens and closes; no roll, rotation or slide */
+@media (prefers-reduced-motion: reduce) {
+  html.is-f .ev-roll > span, html.is-f .ev-pillbtn__ic, html.is-f .ev-pillbtn__ic i, html.is-f .ev-pillbtn__ic svg, html.is-f .ev-menu__title, html.is-f .ev-menu__join { transition: none !important; }
+  html.is-f .ev-pillbtn:hover .ev-roll > span, html.is-f .ev-pillbtn:focus-visible .ev-roll > span { transform: none; }
+  html.is-f .ev-pillbtn--join:hover .ev-pillbtn__ic svg, html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic { transform: none; }
+  html.is-f .ev-menu__item.is-hover .ev-menu__title, html.is-f .ev-menu__join:hover { transform: none; }
+}

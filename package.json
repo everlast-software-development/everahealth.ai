@@ -1,0 +1,21 @@
+{
+  "name": "evera-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Evera AI website: React (Vite) front end + Node.js (Express) API",
+  "scripts": {
+    "setup": "npm install && npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "d3-geo": "^3.1.2",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  },
+  "engines": {
+    "node": ">=18.18"
+  }
+}

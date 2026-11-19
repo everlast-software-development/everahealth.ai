@@ -1,0 +1,18 @@
+/* Preloader styles (see index.html). A static file, linked in <head>, so it paints before any script runs. */
+html, body { margin: 0; background: #07021a; }
+#ev-loader { position: fixed; inset: 0; z-index: 9999; }
+#ev-loader .ev-l__bg { position: absolute; inset: 0; background: radial-gradient(55% 50% at 50% 44%, rgba(146,89,255,.2), rgba(146,89,255,0) 70%), #07021a; transition: opacity .5s ease; }
+#ev-loader canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* the wordmark is the progress bar: a faint base and a lime → lavender fill clipped to the progress */
+#ev-loader .ev-l__word { position: absolute; left: 50%; top: calc(44% + min(23vh, 200px) + 40px); width: min(200px, 46vw); aspect-ratio: 600 / 129; translate: -50% 0; transition: opacity .5s ease; }
+#ev-loader .ev-l__word i { position: absolute; inset: 0;
+  -webkit-mask: url(/brand/evera-wordmark.webp) center / contain no-repeat; mask: url(/brand/evera-wordmark.webp) center / contain no-repeat; }
+#ev-loader .ev-l__base { background: rgba(255,255,255,.14); }
+#ev-loader .ev-l__fill { background: linear-gradient(90deg, #cae751, #bcacff); clip-path: inset(0 calc((1 - var(--p, 0)) * 100%) 0 0); }
+#ev-loader .ev-l__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+#ev-loader.is-out { pointer-events: none; }
+#ev-loader.is-out .ev-l__bg, #ev-loader.is-out .ev-l__word { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  #ev-loader canvas { display: none; }
+  #ev-loader .ev-l__bg, #ev-loader .ev-l__word { transition-duration: .2s; }
+}

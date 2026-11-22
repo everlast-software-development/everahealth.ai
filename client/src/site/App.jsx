@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion, useReducedMotion, useSpring } from 'framer-motion';
-import { ArrowUpRight, ArrowDown, ArrowLeft, ArrowRight, Upload, TrendingUp, Sparkles, Box, Users, Eye, Activity, Star, Check, Phone, User, Mail, FileText, MessageSquare } from 'lucide-react';
+import { ArrowUpRight, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Upload, TrendingUp, Sparkles, Box, Users, Eye, Activity, Star, Check, Phone, User, Mail, FileText, MessageSquare } from 'lucide-react';
 import { useInView } from 'framer-motion';
 import f1 from '../assets/face/img1.webp';
 import f2 from '../assets/face/img2.webp';
@@ -18,9 +18,6 @@ import { Socials } from '../components/ui.jsx';
 import WaitlistModal from '../components/WaitlistModal.jsx';
 import EveraHero from './EveraHero.jsx';
 import EveraHeader from './EveraHeader.jsx';
-import videoMp4 from '../assets/video/evera-hero.mp4';
-import videoWebm from '../assets/video/evera-hero.webm';
-import poster from '../assets/video/evera-hero-poster.jpg';
 import bg from '../assets/video/evera-bg.jpg';
 import whoFull from '../assets/live/who-full.webp';
 import landDots from '../assets/globe/land-dots.json';
@@ -58,15 +55,6 @@ const Fade = ({ on, d = 0, children, className = '', as = 'div' }) => {
   return <C className={className} initial={false} animate={on ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }} transition={{ duration: on ? 0.8 : 0.25, ease: E, delay: on ? d : 0 }}>{children}</C>;
 };
 
-function Video({ className = '' }) {
-  const ref = useRef(null);
-  useEffect(() => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) ref.current?.play().catch(() => {}); }, []);
-  return (
-    <video ref={ref} className={`f-media ${className}`} poster={poster} autoPlay muted loop playsInline preload="auto" aria-hidden="true">
-      <source src={videoMp4} type="video/mp4" /><source src={videoWebm} type="video/webm" />
-    </video>
-  );
-}
 /* Evera's photo as a full-bleed image, scaled slightly while its section enters */
 const Photo = ({ on, pos = '50% 25%', className = '' }) => (
   <motion.div className={`f-media f-photo ${className}`} style={{ backgroundImage: `url(${img.doctor}), url(${bg})`, backgroundPosition: `${pos}, center` }}
@@ -890,18 +878,40 @@ function Contact({ on }) {
   );
 }
 
-function Final({ on, onJoin }) {
+function Final({ on, onJoin, go }) {
+  const to = (label) => go?.(SECTIONS.findIndex(([l]) => l === label));
   return (
     <div className="f-sec f-final">
-      <Video />
-      <div className="f-shade f-shade--final" />
-      <div className="f-final__in">
-        <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>Track your health</Rise><Rise on={on} d={0.22}>smarter with</Rise><Rise on={on} d={0.29}><span className="f-grad">Evera AI</span></Rise></h2>
-        <Fade on={on} d={0.5} className="f-final__text" as="p">Stay empowered every day with data that works for you, helping you reach your healthiest, most confident self.</Fade>
-        <Fade on={on} d={0.6}><button className="f-btn" onClick={onJoin}>Join the waitlist<ArrowUpRight /></button></Fade>
-        <Fade on={on} d={0.7} className="f-final__logo"><img src={img['logo-wordmark']} alt="EVERA" /><p>Your AI Medical Assistant</p></Fade>
+      <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
+      <div className="f-final__wrap">
+        <div className="f-final__in">
+          <Fade on={on} d={0.05} className="f-kicker">Early access is open</Fade>
+          <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>Track your health</Rise><Rise on={on} d={0.22}>smarter with <span className="f-grad">Evera AI</span></Rise></h2>
+          <Fade on={on} d={0.4} className="f-final__text" as="p">Stay empowered every day with data that works for you, helping you reach your healthiest, most confident self.</Fade>
+          <Fade on={on} d={0.5} className="f-final__acts">
+            <button className="f-btn" onClick={onJoin}>Join the waitlist<ArrowUpRight /></button>
+            <button className="f-final__ghost" onClick={() => to('Contact')}>Talk to our team</button>
+          </Fade>
+        </div>
+
+        <Fade on={on} d={0.65} className="f-foot" as="footer">
+          <div className="f-foot__pill">
+            <div className="f-foot__brand">
+              <img src={img['logo-dna-white']} alt="" aria-hidden="true" />
+              <span><b>Evera AI</b><em><i aria-hidden="true" />Your AI medical assistant</em></span>
+            </div>
+            <span className="f-foot__sep" aria-hidden="true" />
+            <div className="f-foot__contact">
+              <a href={contact.phoneHref}><Phone aria-hidden="true" />{contact.phone}</a>
+              <span>{contact.address}</span>
+            </div>
+            <span className="f-foot__sep" aria-hidden="true" />
+            <Socials items={socials} className="f-socials" />
+            <button className="f-foot__top" onClick={() => go?.(0)} aria-label="Back to top" title="Back to top"><ArrowUp aria-hidden="true" /></button>
+          </div>
+          <p className="f-foot__legal">© 2026 Evera AI<span aria-hidden="true">·</span><a href="#privacy">Privacy policy</a><span aria-hidden="true">·</span><a href="#terms">Terms and conditions</a></p>
+        </Fade>
       </div>
-      <Fade on={on} d={0.8} className="f-final__foot"><Socials items={socials} className="f-socials" /><p>© 2026 Evera AI · <a href="#privacy">Privacy policy</a> · <a href="#terms">Terms and conditions</a></p></Fade>
     </div>
   );
 }

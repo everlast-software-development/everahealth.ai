@@ -31,7 +31,6 @@ body { background: var(--pearl); color: var(--ink); }
 .tb__status i { width: 7px; height: 7px; border-radius: 50%; background: #8fb31a; box-shadow: 0 0 10px #8fb31a; animation: led 2s infinite; }
 @keyframes led { 50% { opacity: .35; } }
 .tb__cta { justify-self: end; }
-@media (max-width: 640px) { .tb { grid-template-columns: auto 1fr; } .tb__status { display: none; } }
 
 /* the conversation */
 .talk { position: relative; }
@@ -119,7 +118,7 @@ body { background: var(--pearl); color: var(--ink); }
 .cp li svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 2px; color: var(--violet); }
 .cp.is-feat li svg { color: var(--lime); }
 
-/* waitlist as a chat input */
+/* email signup as a chat input (legacy styles) */
 .chat-join { position: relative; display: flex; gap: 6px; margin-top: 14px; padding: 6px; border-radius: 999px; background: #f4f0ff; border: 1px solid #e6dcff; flex-wrap: wrap; }
 .chat-join input:not(.hp) { flex: 1; min-width: 120px; border: 0; background: transparent; font: inherit; font-size: 15px; color: var(--ink); padding: 8px 12px; }
 .chat-join input:focus { outline: none; }
@@ -141,17 +140,6 @@ body { background: var(--pearl); color: var(--ink); }
 .socials--fin a:hover { background: var(--ink); color: #fff; }
 
 /* phones: two panels on top, Evera behind, chat at the bottom */
-@media (max-width: 860px) {
-  .panel--l2, .panel--r2 { display: none; }
-  .panel, .panel--score { width: 44vw; top: 10vh; }
-  .panel--l1 { left: 3vw; } .panel--r1 { right: 3vw; }
-  .panel--tag.panel--l1, .panel--tag.panel--r1 { top: 12vh; width: auto; left: auto; right: auto; }
-  .panel--tag.panel--l1 { left: 6vw; } .panel--tag.panel--r1 { right: 6vw; }
-  .panel--quote > div { max-width: 44vw; padding: 12px; }
-  .holo-quote blockquote { font-size: 12.5px; }
-  .chat-plans__row { grid-template-columns: 1fr; }
-  .talk__dots { right: 8px; }
-}
 
 /* ==========================================================
    Background ideas (switchable)
@@ -224,11 +212,6 @@ html.is-dark .ft__logo { filter: brightness(0) invert(1); }
 .sw--studio { background: linear-gradient(180deg, #fff, #eceaf2); }
 .sw--liquid { background: conic-gradient(#5619cc, #2a0f4f, #9259ff, #6b8f12, #5619cc); }
 .sw--frost { background: linear-gradient(135deg, #b9a6ff, #f5f3fa 50%, #d6ec7a); }
-@media (max-width: 640px) {
-  .bgpick { flex-direction: row; flex-wrap: wrap; left: 8px; right: 8px; bottom: auto; top: 70px; padding: 6px; }
-  .bgpick > .mono { display: none; }
-  .bgpick button { padding: 5px 8px; font-size: 11px; }
-}
 
 /* ==========================================================
    Horizon (from the reference): near-black, a glowing planet-edge arc
@@ -289,7 +272,6 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 /* Dr. Evera video, filling the screen behind the conversation */
 .hero-video { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; pointer-events: none; background: #07040f; }
 .stage { z-index: 1; }
-@media (max-width: 760px) { .hero-video { object-position: 50% 20%; } }
 
 /* ==========================================================
    What you see vs what Evera AI sees
@@ -379,22 +361,6 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 .fs-pick { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 
 /* phones */
-@media (max-width: 900px) {
-  .fss { padding: 80px 18px 70px; }
-  .fs-classic { grid-template-columns: 1fr; }
-  .fs-classic__col { display: none; }
-  .fs-classic__face { max-width: 420px; margin: 0 auto; }
-  .fs-mob-nav { display: flex; justify-content: space-between; position: absolute; left: 10px; right: 10px; top: 50%; translate: 0 -50%; pointer-events: none; }
-  .fs-mob-nav button { pointer-events: auto; width: 46px; height: 46px; border-radius: 12px; border: 0; background: rgba(255,255,255,.95); color: #1c0a3a; display: grid; place-items: center; }
-  .fs-mob-card { display: block; max-width: 420px; margin: 18px auto 0; }
-  .fs-call { height: auto; display: grid; gap: 14px; }
-  .fs-call__face { position: relative; left: auto; translate: none; width: min(100%, 420px); height: auto; margin: 0 auto; }
-  .fs-call__face .fa { width: 100%; height: auto; }
-  .fs-call__wires, .fs-call__anchor { display: none; }
-  .fs-call__slot { position: static; width: 100%; translate: none; }
-  .fs-call__slot .fsc { max-width: 520px; margin: 0 auto; }
-  .fs-cmp__tabs { grid-template-columns: 1fr 1fr; }
-}
 
 /* ==========================================================
    Hero deck: one scroll, a sequence of heroes
@@ -471,7 +437,7 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 .hv-joincard b { font-family: var(--font-head); font-size: 22px; }
 .hv-joincard span { font-size: 13.5px; color: rgba(255,255,255,.7); }
 
-/* waitlist form inside the last hero */
+/* signup form inside the last hero (legacy styles) */
 .hd-join { position: relative; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 28px; padding: 6px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid rgba(188,172,255,.3); max-width: 480px; }
 .hd-join input:not(.hp) { flex: 1; min-width: 120px; border: 0; background: transparent; color: #fff; font: inherit; font-size: 15px; padding: 10px 14px; }
 .hd-join input::placeholder { color: rgba(255,255,255,.45); }
@@ -502,18 +468,6 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 /* the old chat-only pieces are no longer on the page */
 
 /* tablets / phones: Evera on top, the copy over a dark fade at the bottom */
-@media (max-width: 960px) {
-  .hd__pin::before { background: linear-gradient(to top, rgba(7,4,15,.97) 0%, rgba(7,4,15,.9) 38%, rgba(7,4,15,.2) 62%, transparent 75%); }
-  .hd__copy { left: 20px; right: 20px; width: auto; top: auto; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); translate: none; }
-  .hd__title { font-size: clamp(30px, 8vw, 44px); margin-bottom: 12px; }
-  .hd__badge { margin-bottom: 14px; }
-  .hd__text { font-size: 14.5px; }
-  .hd__say { left: auto; right: 14px; top: 76px; width: min(230px, 60vw); }
-  .say p { font-size: 12.5px; }
-  .hd__visual { display: none; }
-  .hd__scroll { display: none; }
-  .hd__nav { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
-}
 
 /* ==========================================================
    Slider (Slider Revolution style)
@@ -602,23 +556,6 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 .sr-intro__dot { width: 200px; height: 200px; border-radius: 50%; display: grid; place-items: center; }
 .sr-intro__dot img { width: 60%; }
 
-@media (max-width: 900px) {
-  .sr-word { top: 40%; }
-  .sr-subject--evera { height: 66vh; bottom: 150px; }
-  .sr-subject:not(.sr-subject--evera):not(.sr-subject--plans) { width: 82vw; top: 42%; }
-  .sr-subject--plans { width: 66vw; top: 42%; }
-  .sr-count, .sr-thumbs { display: none; }
-  .sr-arrows { left: auto; right: 16px; bottom: auto; top: 76px; flex-direction: column; }
-  .sr-arrows button { width: 40px; height: 40px; }
-  .sr-center { bottom: calc(18px + env(safe-area-inset-bottom, 0px)); gap: 10px; }
-  .sr-line { font-size: 13px; }
-  .sr-plan b { font-size: 44px; }
-}
-@media (max-width: 900px) {
-  .sr-slide:not(.sr-slide--evera) .sr-word { top: 23%; }
-  .sr-slide:not(.sr-slide--evera) .sr-subject:not(.sr-subject--evera) { top: 52%; }
-  .sr-subject--plans { width: 58vw; }
-}
 
 /* ==========================================================
    Evera slides: own design, Slider Revolution style motion
@@ -697,26 +634,8 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 .sv-intro__dot { width: 190px; height: 190px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #9259ff, #2a0f4f); box-shadow: 0 0 80px rgba(146,89,255,.6); }
 .sv-intro__dot img { width: 58%; filter: brightness(0) invert(1); }
 
-@media (max-width: 960px) {
-  .sv-copy { left: 20px; right: 20px; width: auto; top: auto; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); translate: none; }
-  .sv-title { font-size: clamp(32px, 8.4vw, 46px); margin-bottom: 14px; }
-  .sv-badge { margin-bottom: 14px; }
-  .sv-text { font-size: 14.5px; }
-  .sv-stage { left: 50%; right: auto; top: 96px; translate: -50% 0; width: min(78vw, 360px); }
-  .sv-stage .hv-caps, .sv-stage .hv-quotes .hv-quote:nth-child(n+2), .sv-stage .hd__vin > :nth-child(n+2) { display: none; }
-  .sv-in::before { content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none; background: linear-gradient(to top, rgba(9,6,22,.96) 0%, rgba(9,6,22,.8) 34%, transparent 58%); }
-  .sv--video .sv-in::after { background: linear-gradient(to top, rgba(9,6,22,.96) 0%, rgba(9,6,22,.75) 38%, transparent 62%); }
-  .sv-video { object-position: 50% 20%; }
-  .sv-deco--2 { display: none; }
-  .sv-arrows { left: auto; right: 16px; bottom: auto; top: 50%; translate: 0 -50%; flex-direction: column; }
-  .sv-arrows button { width: 38px; height: 38px; }
-  .sv-nav { max-width: calc(100% - 24px); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
-  .sv-count { display: none; }
-}
 .sv-stage { width: min(30vw, 450px); }
 @media (min-width: 961px) and (max-height: 820px) { .sv-stage { width: min(26vw, 400px); } }
-@media (max-width: 960px) { .sv-stage { width: min(80vw, 360px); } }
-@media (max-width: 960px) { .sv-stage .sv-float > :nth-child(n+2) { display: none; } }
 
 /* ==========================================================
    Sections as slides — layout of each slide's content
@@ -879,17 +798,6 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 .ms.sv--video .sv-video { position: absolute; }
 .ms.sv--video::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(9,6,22,.97) 0%, rgba(9,6,22,.8) 40%, transparent 65%); }
 .ms.sv--video .sv-content { z-index: 6; justify-content: flex-end; }
-@media (max-width: 960px) {
-  .sv-content .sv-title, .k-hero .sv-title { font-size: clamp(32px, 8.6vw, 46px); }
-  .k-steps__row, .k-price__row, .k-who, .k-scan, .k-feat, .k-contact { grid-template-columns: 1fr; }
-  .k-who__grid { grid-template-columns: 1fr; gap: 18px; }
-  .k-who__img { max-height: none; }
-  .k-scan__portrait { order: -1; } .sp { max-height: none; margin: 0 auto 10px; width: min(100%, 420px); }
-  .k-feat__show { order: -1; margin-bottom: 8px; } .k-feat__art, .k-feat__art > * { max-height: none; }
-  .k-how__grid { grid-template-columns: 1fr; }
-  .k-field--half { width: 100%; }
-  .k-voices blockquote { font-size: 22px; }
-}
 
 .sv-count { display: none; }
 .sv-nav { max-width: calc(100% - 220px); }
@@ -954,25 +862,10 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 .stepper button.is-past { background: rgba(86,25,204,.45); }
 .stepper button.is-on { width: 34px; background: var(--violet); }
 
-@media (max-width: 860px) {
-  .panel--stat { width: 42vw !important; }
-  .panel--stat.panel--l1 { left: 4vw; top: 11vh; } .panel--stat.panel--r1 { right: 4vw; top: 11vh; }
-  .panel--text { width: 44vw !important; }
-  .stepper { right: 10px; } .stepper__now, .stepper button span { display: none; }
-  .bubble__text { font-size: 16px; }
-}
 @media (min-width: 861px) {
   .panel--r1:not(.panel--stat), .panel--r2:not(.panel--stat) { right: calc(max(var(--gutter), 2.5vw) + 110px); }
   .panel--l1:not(.panel--stat), .panel--l2:not(.panel--stat) { left: calc(max(var(--gutter), 2.5vw) + 30px); }
   .panel--score { width: min(16vw, 220px) !important; }
-}
-@media (max-width: 860px) {
-  .panel, .panel--score, .panel--text { width: 44vw !important; }
-  .panel--l1 { left: 3vw !important; } .panel--r1 { right: 3vw !important; }
-  .panel > div { padding: 9px; border-radius: 16px; }
-  .panel__title { font-size: 9.5px; padding: 2px 4px 8px; margin-bottom: 6px; }
-  .holo-stat b { font-size: 28px; }
-  .holo-text { font-size: 12px; }
 }
 
 /* ==========================================================
@@ -1008,7 +901,6 @@ html[data-bg='horizon'] .cta > svg { background: rgba(255,255,255,.18); color: #
 .thinking i { width: 8px; height: 8px; border-radius: 50%; background: #bcacff; animation: think 1s ease-in-out infinite; }
 .thinking i:nth-child(2) { animation-delay: .15s; } .thinking i:nth-child(3) { animation-delay: .3s; }
 @keyframes think { 0%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-5px); opacity: 1; background: #9259ff; } }
-@media (max-width: 860px) { .panel__tether { display: none; } .panel--l2, .panel--r2, .panel--l3 { display: none; } }
 
 @media (min-width: 861px) { .dock { width: min(640px, 44vw); } }
 
@@ -1101,11 +993,6 @@ html.talk-dark .stepper button.is-on { background: #cae751; } html.talk-dark .st
 html.talk-dark .ft { position: relative; z-index: 3; background: #07051a; } html.talk-dark .ft__logo { filter: brightness(0) invert(1); }
 html.talk-dark .ft__tag { color: #fff; } html.talk-dark .ft__meta { color: rgba(255,255,255,.5); }
 html.talk-dark .socials--fin a { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.12); color: #fff; }
-@media (max-width: 860px) {
-  .tv__video { object-position: 50% 18%; }
-  .sub__text { font-size: 18px; }
-  html.talk-dark .panel > div { padding: 8px; }
-}
 @media (min-width: 861px) {
   html.talk-dark .panel--text.panel--l1 { top: 11vh; } html.talk-dark .panel--text.panel--l2 { top: 35vh; } html.talk-dark .panel--text.panel--l3 { top: 59vh; }
   html.talk-dark .panel--text { width: min(22vw, 320px) !important; }
@@ -1191,31 +1078,16 @@ html.talk-dark .stepper { gap: 10px; }
 .ps__btn svg { width: 17px; height: 17px; }
 .ps__plan ul { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 12px; font-size: 14.5px; color: rgba(255,255,255,.8); }
 .ps__plan li { display: flex; gap: 10px; } .ps__plan li svg { width: 17px; height: 17px; color: #cae751; flex-shrink: 0; margin-top: 2px; }
-@media (max-width: 900px) { .ps__row { grid-template-columns: 1fr; } .ps__plan.is-feat { transform: none; } }
 
 /* footer: continues the pricing colours instead of flat black */
 html.talk-dark .ft { background: linear-gradient(180deg, #0d0624 0%, #1a0a3a 100%); padding-top: 80px; }
 
-/* the waitlist popup, borderless */
+/* the site popup (modal shell), borderless */
 html.talk-dark .modal { background: linear-gradient(165deg, #241152, #12082c); color: #fff; border: 0; border-radius: 28px; box-shadow: 0 60px 140px -40px rgba(0,0,0,.95), 0 0 120px -40px rgba(146,89,255,.7); }
 html.talk-dark .modal::backdrop { background: rgba(5,3,15,.7); backdrop-filter: blur(6px); }
 html.talk-dark .modal__x { background: rgba(255,255,255,.08); color: #fff; border: 0; }
 html.talk-dark .modal__text { color: rgba(255,255,255,.65); }
-html.talk-dark .modal .badge--glass { background: rgba(202,231,81,.12); border: 0; color: #cae751; }
-html.talk-dark .modal .field label { color: rgba(255,255,255,.8); }
-html.talk-dark .modal .field input, html.talk-dark .modal .field textarea { background: rgba(255,255,255,.07); border: 0; color: #fff; border-radius: 14px; }
-html.talk-dark .modal .field input:focus, html.talk-dark .modal .field textarea:focus { background: rgba(255,255,255,.11); box-shadow: 0 0 0 2px #9259ff; outline: none; }
-html.talk-dark .modal .cta--lime { box-shadow: none; }
-html.talk-dark .modal .done { color: #fff; } html.talk-dark .modal .done p { color: rgba(255,255,255,.65); }
 
-@media (max-width: 860px) {
-  .chatc { bottom: 10px; border-radius: 22px; }
-  .chatc__body { min-height: 120px; padding: 14px 14px 4px; } .msg-ai p { font-size: 14.5px; }
-  .chatc__replies { padding: 8px 14px 14px; }
-  .chatc__step { display: none; }
-  .talk__hint { display: none; }
-}
-html.talk-dark .modal .cta--block { width: 100%; justify-content: center; padding: 14px 20px; font-size: 15px; }
 
 /* ==========================================================
    New background, and the flip from the conversation to pricing
@@ -1224,7 +1096,6 @@ html.talk-dark .modal .cta--block { width: 100%; justify-content: center; paddin
 .tv { background-size: cover; background-position: center; }
 .tv__video { -webkit-mask-image: radial-gradient(ellipse 34% 78% at 50% 46%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 34% 78% at 50% 46%, #000 58%, transparent 100%); }
 .tv__shade { background: linear-gradient(to top, rgba(14,8,40,.85) 0%, rgba(14,8,40,.35) 26%, transparent 46%); }
-@media (max-width: 860px) { .tv__video { -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 60%, transparent 100%); mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 60%, transparent 100%); } }
 
 /* as pricing rises, the conversation behind it recedes like the previous page */
 .tv, .talk__pin { transform: scale(calc(1 - var(--stack, 0) * .08)); transform-origin: 50% 30%; }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { postJSON } from './api.js';
 
-// Shared state for the contact and waitlist forms
+// Shared state for the contact form
 export function useSubmit(path) {
   const [status, setStatus] = useState('idle'); // idle | sending | done | error
   const [error, setError] = useState('');

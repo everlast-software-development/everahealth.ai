@@ -7,7 +7,6 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import waitlistRouter from './routes/waitlist.js';
 import contactRouter from './routes/contact.js';
 import newsletterRouter from './routes/newsletter.js';
 
@@ -39,7 +38,6 @@ const formLimiter = rateLimit({
 });
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
-app.use('/api/waitlist', formLimiter, waitlistRouter);
 app.use('/api/contact', formLimiter, contactRouter);
 app.use('/api/newsletter', formLimiter, newsletterRouter);
 app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found.' }));

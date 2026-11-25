@@ -26,12 +26,8 @@ const TEXTS = {
 };
 const QUESTIONS = { can: 'What can you do?', safe: 'Is my data safe?' };
 
-const isPhoneNow = () => typeof window !== 'undefined' && matchMedia('(max-width: 860px)').matches;
-function usePhone() {
-  const [m, setM] = useState(isPhoneNow);
-  useEffect(() => { const q = matchMedia('(max-width: 860px)'); const f = () => setM(q.matches); q.addEventListener('change', f); return () => q.removeEventListener('change', f); }, []);
-  return m;
-}
+// fewer particles on small screens (performance only; the layout is the same everywhere)
+const smallScreen = () => typeof window !== 'undefined' && matchMedia('(max-width: 1023px)').matches;
 
 const Rise = ({ on, d = 0, children }) => (
   <span className="f-mask"><motion.span initial={false} animate={on ? { y: '0%', opacity: 1 } : { y: '105%', opacity: 0 }} transition={{ duration: on ? 0.9 : 0.3, ease: E, delay: on ? d : 0 }}>{children}</motion.span></span>
@@ -130,8 +126,7 @@ function useSpeech(text) {
   return { ok, speaking, toggle };
 }
 
-export default function EveraHero({ on, onJoin, go }) {
-  const phone = usePhone();
+export default function EveraHero({ on, onDownload, go }) {
   const reduced = useReducedMotion();
   const stageRef = useRef(null), videoRef = useRef(null), canvasRef = useRef(null), rootRef = useRef(null);
   const [mode, setMode] = useState(() => (introPlayed || reduced ? 'live' : 'wait'));   // wait → fly → reveal → live
@@ -165,7 +160,7 @@ export default function EveraHero({ on, onJoin, go }) {
       if (cancelled) return;
       if (!window.__evera?.loading) { goLive(); return; }           // the preloader already gave up waiting
       const stage = stageRef.current, rect = stage.getBoundingClientRect(), W = rect.width, H = rect.height;
-      const S = samplePoster(img, W, H, parsePos(getComputedStyle(video).objectPosition), isPhoneNow() ? 6500 : 15000);
+      const S = samplePoster(img, W, H, parsePos(getComputedStyle(video).objectPosition), smallScreen() ? 6500 : 15000);
       ev.handoff = (from) => start(from, S, W, H);
       ev.heroReady?.();
     }).catch(() => { ev.heroReady?.(); goLive(); });
@@ -234,11 +229,19 @@ export default function EveraHero({ on, onJoin, go }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // small screens: the headline sits just above the chat, so the chat's real height is handed to the CSS (--dock-h)
+  const dockRef = useRef(null);
+  useEffect(() => {
+    const d = dockRef.current, root = rootRef.current; if (!d || !root || typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(() => { const v = `${Math.round(d.offsetHeight)}px`; root.style.setProperty('--dock-h', v); document.documentElement.style.setProperty('--dock-h', v); });
+    ro.observe(d); return () => ro.disconnect();
+  }, []);
+
   const others = Object.keys(QUESTIONS).filter((k) => k !== chat.key);
   const talking = chat.phase === 'think' || chat.phase === 'type' || speech.speaking;
 
   return (
-    <div ref={rootRef} className={`f-sec h-pa ev-hero ${phone ? 'is-m' : ''} is-${mode}`}>
+    <div ref={rootRef} className={`f-sec h-pa ev-hero is-${mode}`}>
       <div className="ev-hero__stage" ref={stageRef}>
         <video ref={videoRef} className="ev-hero__video" poster={poster} muted playsInline loop preload="auto" aria-hidden="true">
           <source src={videoMp4} type="video/mp4" /><source src={videoWebm} type="video/webm" />
@@ -261,10 +264,10 @@ export default function EveraHero({ on, onJoin, go }) {
           <Rise on={show} d={0.28}><span className="ev-grad">Health</span></Rise>
         </h1>
         <Fade on={show} d={0.4} className="ev-lede" as="p">Track your health smarter with clear, personalised insights that guide your best decisions.</Fade>
-        <Fade on={show} d={0.5}><button className="ev-btn" onClick={onJoin}>Join our waiting list<ArrowUpRight aria-hidden="true" /></button></Fade>
+        <Fade on={show} d={0.5}><button className="ev-btn" onClick={onDownload}>Download the app<ArrowUpRight aria-hidden="true" /></button></Fade>
       </div>
 
-      <motion.aside className="h-pa__dock ev-dock" aria-label="Talk to Evera" initial={false}
+      <motion.aside ref={dockRef} className="h-pa__dock ev-dock" aria-label="Talk to Evera" initial={false}
         animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.8, ease: E, delay: show ? 0.7 : 0 }}>
         <div className="h-pa__card">
           <p className="h-pa__who">

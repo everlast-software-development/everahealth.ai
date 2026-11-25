@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { Download } from 'lucide-react';
+import StoreButtons from '../components/StoreButtons.jsx';
 import './header.css';
 
-/* Evera header: the logo on the left; "Get early access" and "Menu" on the right, on the same gutter as
+/* Evera header: the logo on the left; "Download app" and "Menu" on the right, on the same gutter as
    every section. "Menu" opens a full-screen index that grows out of the button as a circle. */
 
 const E = [0.22, 1, 0.36, 1];
@@ -25,7 +26,7 @@ const Roll = ({ children }) => (
   <span className="ev-roll"><span>{children}</span><span aria-hidden="true">{children}</span></span>
 );
 
-export default function EveraHeader({ cur, go, onJoin, logo, inert }) {
+export default function EveraHeader({ cur, go, onDownload, logo, inert }) {
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [hover, setHover] = useState(null);         // the menu item under the pointer or focus
@@ -74,9 +75,8 @@ export default function EveraHeader({ cur, go, onJoin, logo, inert }) {
       <div className="ev-nav__bar">
         <button className="ev-nav__logo" onClick={() => pick(0)} aria-label="Evera home"><img src={logo} alt="EVERA" /></button>
         <div className="ev-nav__acts">
-          <button className="ev-pillbtn ev-pillbtn--join" onClick={() => { close(); onJoin(); }}>
-            <Roll>Get early access</Roll>
-            <span className="ev-pillbtn__ic"><ArrowUpRight aria-hidden="true" /></span>
+          <button className="f-btn ev-nav__dl" onClick={() => { close(); onDownload(); }}>
+            <Download aria-hidden="true" /><span className="ev-nav__dl-l">Download app</span><span className="ev-nav__dl-s">Get app</span>
           </button>
           <button ref={btn} className={`ev-pillbtn ev-pillbtn--menu ${open ? 'is-open' : ''}`} onClick={toggle}
             aria-expanded={open} aria-controls="ev-menu" aria-label={open ? 'Close menu' : 'Open menu'}>
@@ -117,7 +117,7 @@ export default function EveraHeader({ cur, go, onJoin, logo, inert }) {
                     <p className="ev-menu__text">{shownItem.text}</p>
                   </motion.div>
                 </AnimatePresence>
-                <button className="ev-menu__join" onClick={() => { close(); onJoin(); }}>Join our waiting list<ArrowUpRight aria-hidden="true" /></button>
+                <div className="ev-menu__get"><p className="ev-menu__get-h">Get the Evera app</p><StoreButtons /></div>
               </motion.aside>
             </div>
           </motion.div>

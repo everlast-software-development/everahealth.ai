@@ -59,12 +59,22 @@ export function SocialIcon({ k }) {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={si[k].path} /></svg>;
 }
 
-export function Socials({ items, className = '' }) {
+// Social links: on hover/focus a lime liquid fill rises, the icon swaps (out up, in from below),
+// the button lifts with a soft glow and a tooltip names the platform. Styles: site.css (html.is-f .socials).
+// `on` (optional): pop in one after another when the parent section becomes active; without it, when scrolled into view.
+export function Socials({ items, className = '', on, delay = 0 }) {
+  const pop = (i) => ({ duration: 0.45, ease, delay: delay + i * 0.05 });
+  const motionProps = (i) => (on === undefined
+    ? { initial: { opacity: 0, scale: 0.6 }, whileInView: { opacity: 1, scale: 1 }, viewport: inView, transition: pop(i) }
+    : { initial: false, animate: on ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.6 }, transition: on ? pop(i) : { duration: 0.2 } });
   return (
     <ul className={`socials ${className}`}>
       {items.map((s, i) => (
-        <motion.li key={s.name} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={inView} transition={{ duration: 0.6, ease, delay: i * 0.05 }}>
-          <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.name}><SocialIcon k={s.key} /></a>
+        <motion.li key={s.name} {...motionProps(i)}>
+          <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.name}>
+            <span className="socials__ic" aria-hidden="true"><span><SocialIcon k={s.key} /></span><span><SocialIcon k={s.key} /></span></span>
+          </a>
+          <span className="socials__tip" aria-hidden="true">{s.name}</span>
         </motion.li>
       ))}
     </ul>

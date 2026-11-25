@@ -79,3 +79,9 @@ export const socials = [
   { name: 'X', key: 'siX', href: 'https://x.com/EveraAi' },
   { name: 'LinkedIn', key: 'linkedin', href: 'https://www.linkedin.com/in/evera-ai-165b98395' },
 ];
+
+// The Evera app in the stores: the single source of truth for every download link and QR code
+export const appLinks = {
+  ios: 'https://apps.apple.com/us/app/evera-ai/id6758142896',
+  android: 'https://play.google.com/store/apps/details?id=com.evera.ai',
+};

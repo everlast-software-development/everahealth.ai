@@ -6,7 +6,7 @@ html.is-f { --display: 'Anton', 'Bebas Neue', 'Oswald', 'Arial Narrow', Impact, 
 
 html.is-f .f-viewport, html.is-f #main.f-viewport { position: fixed; inset: 0; overflow: hidden; z-index: 1; }
 html.is-f .f-track { position: absolute; inset: 0; will-change: transform; }
-html.is-f .f-slot { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
+html.is-f .f-slot { position: relative; height: 100%; overflow: hidden; }   /* one screen: the track is the viewport */
 html.is-f .f-sec { position: absolute; inset: 0; overflow: hidden; background: #120830; }
 
 /* media and shading */
@@ -93,76 +93,120 @@ html.is-f .f-plan__price { font-size: 14px; color: rgba(255,255,255,.75); } html
 html.is-f .f-plan__feat { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,.72); flex: 1; }
 html.is-f .f-plan .f-link { align-self: flex-start; margin-top: 8px; }
 
-/* 8 final: headline centred above a slim two-row footer */
-html.is-f .f-final { --gut: clamp(70px, 7vw, 130px); --foot: 90px; }   /* --foot: the footer's height */
-html.is-f .f-final__wrap { position: absolute; inset: 0; z-index: 2; }
-html.is-f .f-final__in { position: absolute; left: var(--gut); top: 90px; bottom: calc(26px + var(--foot) + 40px); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
-html.is-f .f-final__in .f-kicker { margin-bottom: 16px; }
-@media (min-width: 861px) { html.is-f .f-final__in .f-mask { white-space: nowrap; } }
-html.is-f .f-final__text { margin: 20px 0 28px; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,.8); max-width: 44ch; }
-html.is-f .f-final__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-html.is-f .f-final__ghost { padding: 14px 22px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(255,255,255,.04); color: #fff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .3s, border-color .3s; }
-html.is-f .f-final__ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); }
-
-/* the footer: one glass capsule, bottom centre (like the hero chat), and a quiet legal line */
-html.is-f .f-foot { position: absolute; left: 50%; translate: -50% 0; bottom: 22px; width: max-content; max-width: calc(100% - 2 * var(--gut)); display: flex; flex-direction: column; align-items: center; gap: 12px; }
-html.is-f .f-foot__pill { display: flex; align-items: center; gap: 18px; padding: 8px 8px 8px 12px; border-radius: 999px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 24px 50px -28px rgba(0,0,0,.9); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); white-space: nowrap; }
-html.is-f .f-foot__brand { display: flex; align-items: center; gap: 10px; }
-html.is-f .f-foot__brand img { display: block; height: 26px; width: auto; flex: none; animation: evHiTurn 7s linear infinite; }
-html.is-f .f-foot__brand > span { display: grid; line-height: 1.2; }
-html.is-f .f-foot__brand b { font-size: 13.5px; font-weight: 700; color: #fff; }
-html.is-f .f-foot__brand em { display: flex; align-items: center; gap: 6px; font-style: normal; font-size: 11.5px; color: rgba(255,255,255,.55); }
-html.is-f .f-foot__brand em i { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 0 rgba(202,231,81,.6); animation: fFootPulse 2.4s ease-out infinite; }
-@keyframes fFootPulse { 0% { box-shadow: 0 0 0 0 rgba(202,231,81,.55); } 70%, 100% { box-shadow: 0 0 0 7px rgba(202,231,81,0); } }
-html.is-f .f-foot__sep { width: 1px; height: 22px; background: rgba(255,255,255,.14); }
-html.is-f .f-foot__contact { display: flex; align-items: center; gap: 14px; font-size: 13.5px; }
-html.is-f .f-foot__contact a { display: inline-flex; align-items: center; gap: 7px; color: #fff; font-weight: 600; text-decoration: none; transition: color .25s; }
-html.is-f .f-foot__contact a svg { width: 14px; height: 14px; color: var(--lime); }
-html.is-f .f-foot__contact a:hover { color: var(--lime); }
-html.is-f .f-foot__contact span { color: rgba(255,255,255,.55); }
-html.is-f .f-socials { margin: 0; gap: 2px; flex-wrap: nowrap; }
-html.is-f .f-socials a { width: 32px; height: 32px; background: transparent; border: 0; color: rgba(255,255,255,.7); transition: background .25s, color .25s; }
-html.is-f .f-socials a:hover { transform: none; background: rgba(255,255,255,.1); color: var(--lime); }
-html.is-f .f-socials svg { width: 15px; height: 15px; }
-html.is-f .f-foot__top { display: grid; place-items: center; flex: none; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: var(--lime); color: #120830; cursor: pointer; transition: transform .3s var(--ease); }
-html.is-f .f-foot__top svg { width: 17px; height: 17px; }
-html.is-f .f-foot__top:hover { transform: translateY(-2px); }
-html.is-f .f-foot__legal { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin: 0; font-size: 12px; color: rgba(255,255,255,.4); }
-html.is-f .f-foot__legal a { color: rgba(255,255,255,.5); text-decoration: none; transition: color .25s; }
-html.is-f .f-foot__legal a:hover { color: #fff; }
-html.is-f .f-foot a:focus-visible, html.is-f .f-foot button:focus-visible, html.is-f .f-final__ghost:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { html.is-f .f-foot__brand img, html.is-f .f-foot__brand em i { animation: none; } }
-/* short laptop screens: a smaller headline */
-@media (min-width: 861px) and (max-height: 820px) {
-  html.is-f .f-final__in { top: 80px; }
-  html.is-f .f-final .f-big--m { font-size: clamp(40px, 4vw, 64px); }
-  html.is-f .f-final__text { margin: 14px 0 20px; font-size: 15px; }
+/* ==========================================================
+   Social links, site-wide (the shared <Socials>): a dock-style magnify. The hovered button grows and
+   lifts, filling with a lime → lilac gradient and a dark icon; its neighbours grow a little, so the row
+   reacts like a dock. A tooltip names the platform. No borders.
+   ========================================================== */
+html.is-f .socials { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+html.is-f .socials li { position: relative; display: block; }
+html.is-f .socials a { --s: 38px; position: relative; isolation: isolate; overflow: hidden; display: grid; place-items: center; width: var(--s); height: var(--s); border: 0; border-radius: 50%;
+  background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+  transform-origin: 50% 100%; transition: transform .4s cubic-bezier(.34,1.4,.64,1), box-shadow .4s ease, color .25s ease; }
+html.is-f .socials--sm a { --s: 34px; }
+/* the gradient fill, faded in on hover */
+html.is-f .socials a::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: 50%; background: linear-gradient(135deg, #cae751 0%, #bcacff 100%); opacity: 0; transition: opacity .3s ease; }
+html.is-f .socials__ic { display: grid; place-items: center; width: 16px; height: 16px; }
+html.is-f .socials__ic > span + span { display: none; }        /* one icon is enough */
+html.is-f .socials__ic svg { display: block; width: 16px; height: 16px; }
+/* the hovered button: bigger, lifted, filled */
+html.is-f .socials li:hover a, html.is-f .socials a:focus-visible { transform: translateY(-3px) scale(1.14); color: #120830; box-shadow: 0 12px 26px -10px rgba(188,172,255,.75); }
+html.is-f .socials li:hover a::before, html.is-f .socials a:focus-visible::before { opacity: 1; }
+/* its neighbours: a little bigger */
+html.is-f .socials li:hover + li a, html.is-f .socials li:has(+ li:hover) a { transform: translateY(-1px) scale(1.05); color: #fff; }
+html.is-f .socials a:focus-visible { outline: 2px solid #cae751; outline-offset: 3px; }
+/* the tooltip */
+html.is-f .socials__tip { position: absolute; z-index: 5; left: 50%; bottom: calc(100% + 16px); translate: -50% 6px; padding: 5px 9px; border-radius: 8px; background: rgba(11,4,32,.9);
+  color: #fff; font-family: var(--font-head); font-size: 12px; font-weight: 600; line-height: 1.2; white-space: nowrap; pointer-events: none; opacity: 0;
+  transition: opacity .25s ease, translate .35s cubic-bezier(.22,1,.36,1); }
+html.is-f .socials li:hover .socials__tip, html.is-f .socials a:focus-visible + .socials__tip { opacity: 1; translate: -50% 0; }
+/* first and last tooltips align to the row's outer edges, so a card or screen edge never cuts them */
+html.is-f .socials li:first-child .socials__tip { left: 0; translate: 0 6px; }
+html.is-f .socials li:last-child .socials__tip { left: auto; right: 0; translate: 0 6px; }
+html.is-f .socials li:first-child:hover .socials__tip, html.is-f .socials li:first-child a:focus-visible + .socials__tip,
+html.is-f .socials li:last-child:hover .socials__tip, html.is-f .socials li:last-child a:focus-visible + .socials__tip { translate: 0 0; }
+@media (prefers-reduced-motion: reduce) {
+  html.is-f .socials a, html.is-f .socials a::before, html.is-f .socials__tip { transition: none; }
+  html.is-f .socials li:hover a, html.is-f .socials a:focus-visible, html.is-f .socials li:hover + li a, html.is-f .socials li:has(+ li:hover) a { transform: none; }
 }
-/* narrow desktops: drop the address and the tagline so the capsule stays on one line */
-@media (min-width: 861px) and (max-width: 1100px) {
-  html.is-f .f-foot__contact span, html.is-f .f-foot__brand em { display: none; }
-  html.is-f .f-foot__pill { gap: 14px; }
+
+/* ==========================================================
+   Footer (last section): a heading, three glass cards with outlined numbers
+   (brand, explore, get in touch) and a bottom line. No borders: edges are inset shadows.
+   ========================================================== */
+/* heading at the standard spot, the cards 36px below it, the bottom line 28px below the cards; the wordmark fills the rest */
+html.is-f .f-fo__in { position: absolute; z-index: 2; left: clamp(70px, 7vw, 130px); right: clamp(70px, 7vw, 130px); top: 104px; bottom: 26px; display: flex; flex-direction: column; margin: 0; }
+html.is-f .f-fo .f-fx__head { position: static; margin: 0; padding: 0; }
+html.is-f .f-fo__mid { margin-top: 36px; }
+html.is-f .f-fo__bar { margin-top: 28px; margin-bottom: 28px; }
+/* the EVERA signature: it fills the space below the bottom line, across the same edges as the cards; the letters
+   are as large as that space allows (full content width when there is room), whole and centred. A light follows
+   the pointer inside the letters. */
+html.is-f .f-fo__word { position: relative; flex: 1 1 auto; min-height: 70px; margin-top: 28px; --mx: 50%; --my: 50%; pointer-events: none;
+  margin-block: auto;   /* centred in the space below the bottom line; as large as that space allows */
+  -webkit-mask-size: contain; mask-size: contain;               /* the logo keeps its true proportions */ -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;
+  background: linear-gradient(180deg, rgba(188,172,255,.34), rgba(188,172,255,.1)); }
+html.is-f .f-fo__light { position: absolute; inset: 0; background: radial-gradient(20% 90% at var(--mx) var(--my), #cae751 0%, #9259ff 45%, transparent 75%); opacity: 0; transition: opacity .5s ease; }
+html.is-f .f-fo__word.is-lit .f-fo__light { opacity: 1; }
+/* the cards */
+html.is-f .f-fo__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+html.is-f .f-fo__card { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; min-width: 0; padding: 28px; border-radius: 26px; overflow: hidden;
+  background: rgba(255,255,255,.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 30px 60px -30px rgba(0,0,0,.8);
+  transition: background .4s var(--ease), translate .4s var(--ease); }
+html.is-f .f-fo__card:hover { translate: 0 -4px; }     /* translate, not transform: the entrance animates transform */
+html.is-f .f-fo__card:not(.f-fo__card--brand):hover { background: rgba(255,255,255,.08); }
+html.is-f .f-fo__card--brand { background: linear-gradient(155deg, rgba(122,69,255,.5), rgba(58,26,140,.45) 60%, rgba(24,10,60,.6)); }
+html.is-f .f-fo__card > *:not(.f-fo__num) { position: relative; z-index: 1; }
+html.is-f .f-fo__num { position: absolute; z-index: 0; right: 22px; top: 18px; font-family: var(--display); font-size: 48px; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgba(202,231,81,.4); pointer-events: none; }
+html.is-f .f-fo__logo { display: block; height: 22px; width: auto; filter: brightness(0) invert(1); }
+html.is-f .f-fo__top { align-self: stretch; display: flex; align-items: center; height: 22px; padding-right: 70px; }   /* the title row; 70px kept clear for the number */
+html.is-f .f-fo__about { margin: -2px 0 0; max-width: 30ch; font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,.78); }   /* wraps before the outlined number */
+html.is-f .f-fo__end { margin-top: auto; padding-top: 4px; }
+html.is-f .f-fo__card h3 { margin: 0; font-family: var(--font-head); font-size: 18px; font-weight: 600; line-height: 22px; color: #fff; }
+/* Explore: two columns of links; a lime arrow slides in on hover */
+html.is-f .f-fo__nav { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 20px; width: 100%; margin: 0; padding: 0; list-style: none; }
+html.is-f .f-fo__nav button { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 9px 0; border: 0; background: none; box-shadow: 0 1px 0 rgba(255,255,255,.06);
+  color: rgba(255,255,255,.72); font: inherit; font-size: 14.5px; text-align: left; cursor: pointer; transition: color .25s; }
+html.is-f .f-fo__nav svg { flex: none; width: 16px; height: 16px; color: #cae751; opacity: 0; transform: translateX(-6px); transition: opacity .3s, transform .35s var(--ease); }
+html.is-f .f-fo__nav button:hover, html.is-f .f-fo__nav button:focus-visible { color: #fff; }
+html.is-f .f-fo__nav button:hover svg, html.is-f .f-fo__nav button:focus-visible svg { opacity: 1; transform: none; }
+html.is-f .f-fo__nav button:focus-visible { outline: none; box-shadow: 0 2px 0 #cae751; }
+/* Get in touch */
+html.is-f .f-fo__tel { display: inline-flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 600; color: #fff; text-decoration: none; transition: color .25s; }
+html.is-f .f-fo__tel svg, html.is-f .f-fo__addr svg { flex: none; width: 16px; height: 16px; color: #cae751; }
+html.is-f .f-fo__tel:hover { color: #cae751; }
+html.is-f .f-fo__addr { display: flex; align-items: center; gap: 9px; margin: -4px 0 0; font-size: 14.5px; color: rgba(255,255,255,.72); }
+/* the bottom line: copyright, live Abu Dhabi clock ... Privacy, Terms, Back to top */
+html.is-f .f-fo__bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px 20px; padding-top: 16px; box-shadow: 0 -1px 0 rgba(255,255,255,.08); font-size: 13px; }
+html.is-f .f-fo__meta { display: flex; align-items: center; gap: 14px; margin: 0; line-height: 32px; color: rgba(255,255,255,.55); }
+html.is-f .f-fo__dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,.3); }
+html.is-f .f-fo__clock { display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+html.is-f .f-fo__clock > i { width: 6px; height: 6px; border-radius: 50%; background: #cae751; box-shadow: 0 0 8px rgba(202,231,81,.7); }
+html.is-f .f-fo__colon { animation: fFtBlink 1s steps(1) infinite; }
+@keyframes fFtBlink { 50% { opacity: 0; } }
+html.is-f .f-fo__links { position: relative; display: flex; align-items: center; }
+html.is-f .f-fo__links a, html.is-f .f-fo__links button { position: relative; z-index: 1; display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border: 0; border-radius: 999px; background: none;
+  color: rgba(255,255,255,.6); font: inherit; font-size: 13px; text-decoration: none; cursor: pointer; transition: color .25s; }
+html.is-f .f-fo__links a:hover, html.is-f .f-fo__links button:hover, html.is-f .f-fo__links a:focus-visible, html.is-f .f-fo__links button:focus-visible { color: #fff; outline: none; }
+html.is-f .f-fo__pill { position: absolute; left: 0; top: 0; height: 32px; border-radius: 999px; background: rgba(255,255,255,.07); pointer-events: none; }
+html.is-f .f-fo a:focus-visible, html.is-f .f-fo .f-btn:focus-visible { outline: 2px solid #cae751; outline-offset: 3px; }
+html.is-f .f-fo__links a:focus-visible { outline: none; }
+/* short laptop screens */
+@media (min-width: 1024px) and (max-height: 800px) {
+  html.is-f .f-fo__in { top: 92px; }
+  html.is-f .f-fo__in { bottom: 18px; }
+  html.is-f .f-fo__word { margin-top: 20px; }
+  html.is-f .f-fo__card { padding: 22px; }
+  html.is-f .f-fo__num { font-size: 40px; }
+  html.is-f .f-fo__nav button { padding: 7px 0; }
+}
+/* phones: normal flow, cards stacked */
+@media (prefers-reduced-motion: reduce) {
+  html.is-f .f-fo__colon { animation: none; }
+  html.is-f .f-fo__nav svg, html.is-f .f-fo__card { transition: none; }
 }
 
 /* phones */
-@media (max-width: 860px) {
-  html.is-f .f-progress, html.is-f .f-dots { display: none; }
-  html.is-f .f-how__in { left: 20px; right: 20px; width: auto; }
-  html.is-f .f-shade--left { background: rgba(18,8,48,.78); }
-  html.is-f .f-scan__split { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
-  html.is-f .f-scan__half .f-big { margin-top: 18vh; font-size: 44px; }
-  html.is-f .f-plans { grid-template-columns: 1fr; width: 100%; } html.is-f .f-plan { padding: 16px; } html.is-f .f-plan__feat { display: none; }
-  html.is-f .f-plan__price b { font-size: 32px; }
-  html.is-f .f-next { left: auto; right: 16px; }
-}
-@media (max-width: 860px) {
-  html.is-f .f-scan__caps { left: 0; right: 0; translate: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding: 0 16px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); scrollbar-width: none; }
-  html.is-f .f-scan__caps::-webkit-scrollbar { display: none; }
-  html.is-f .f-scan__caps button { white-space: nowrap; }
-  html.is-f .f-scan__half .f-big { margin-top: 0; position: absolute; top: 14px; left: 0; right: 0; }
-  html.is-f .f-scan__half--ai .f-big { top: auto; bottom: 62px; }
-}
-@media (max-width: 860px) { html.is-f .f-scan__half:not(.f-scan__half--ai) .f-big { top: auto; bottom: 10px; } }
 
 /* ==========================================================
    Face scan — the original section, in this site's style
@@ -192,19 +236,6 @@ html.is-f .f-fs__face img { position: absolute; left: 50%; bottom: 0; height: 10
 html.is-f .f-fs__face img.is-on { opacity: 1; }
 html.is-f .f-fs__mob { display: none; }
 
-@media (max-width: 1024px) {
-  html.is-f .f-fs__grid { display: none; }
-  html.is-f .f-fs__in { padding: 86px 20px 24px; justify-content: flex-start; }
-  html.is-f .f-fs__title { font-size: 34px; }
-  html.is-f .f-fs__mob { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 560px; flex: 1; min-height: 0; }
-  html.is-f .f-fs__face--m { flex: 1; max-height: none; min-height: 260px; }
-  html.is-f .f-fs__arrow { position: absolute; top: 50%; translate: 0 -50%; z-index: 2; width: 44px; height: 44px; border: 0; border-radius: 12px; display: grid; place-items: center; background: rgba(255,255,255,.95); color: #120830; cursor: pointer; }
-  html.is-f .f-fs__arrow--l { left: 0; } html.is-f .f-fs__arrow--r { right: 0; }
-  html.is-f .f-fs__arrow svg { width: 20px; height: 20px; }
-  html.is-f .f-fs__mob .f-fs__cardwrap { width: 100%; }
-  html.is-f .f-fs__mob .f-fs__card { padding: 16px 18px; }
-}
-@media (max-width: 1024px) { html.is-f .f-fs__face--m { align-self: stretch; width: 100%; overflow: hidden; border-radius: 18px; } }
 
 /* ==========================================================
    Face scan — face in the centre, three designs
@@ -223,15 +254,15 @@ html.is-f .f-face > img { position: absolute; inset: 0; width: 100%; height: 100
 /* face in the centre, number + title on the left, list on the right */
 html.is-f .f-sc__glow { position: absolute; left: 50%; top: 55%; width: min(56vw, 760px); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; pointer-events: none;
   background: radial-gradient(closest-side, rgba(188,172,255,.42), rgba(146,89,255,.18) 55%, transparent 100%); }
-html.is-f .f-sc__left { position: absolute; z-index: 3; left: clamp(70px, 7vw, 120px); top: 50%; translate: 0 -50%; width: min(26vw, 380px); }
-html.is-f .f-sc__head { margin: 0 0 34px; font-family: var(--font-head); font-size: clamp(20px, 1.6vw, 26px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; color: #fff; }
+/* below the standard heading (.f-fx__head): the current analysis on the left, the list on the right, both on the section gutter */
+html.is-f .f-sc__left { position: absolute; z-index: 3; left: clamp(70px, 7vw, 130px); top: calc(50% + 50px); translate: 0 -50%; width: min(26vw, 380px); }
 html.is-f .f-sc__num { font-family: var(--display); font-size: clamp(90px, 9vw, 150px); line-height: .85; color: transparent; -webkit-text-stroke: 1.5px rgba(202,231,81,.9); }
 html.is-f .f-sc__title { margin-top: 12px; font-family: var(--display); text-transform: uppercase; font-size: clamp(34px, 3.3vw, 54px); line-height: .95; color: #fff; }
-html.is-f .f-sc__stage { position: absolute; z-index: 2; left: 50%; bottom: 0; translate: -50% 0; width: min(44vw, 640px); height: 84vh; }
+html.is-f .f-sc__stage { position: absolute; z-index: 2; left: 50%; bottom: 0; translate: -50% 0; width: min(44vw, 640px); height: calc(100% - 210px); }   /* the face starts below the heading */
 html.is-f .f-face--sc { height: 100%; }
 html.is-f .f-sc__tag { position: absolute; z-index: 3; left: 50%; bottom: 64px; translate: -50% 0; display: flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 11.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; padding: 9px 14px; border-radius: 999px; background: rgba(14,6,36,.55); backdrop-filter: blur(10px); }
 html.is-f .f-sc__tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); }
-html.is-f .f-sc__list { position: absolute; z-index: 3; right: clamp(70px, 7vw, 120px); top: 50%; translate: 0 -50%; width: min(24vw, 340px); list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+html.is-f .f-sc__list { position: absolute; z-index: 3; right: clamp(70px, 7vw, 130px); top: calc(50% + 50px); translate: 0 -50%; width: min(24vw, 340px); list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
 html.is-f .f-sc__list button { position: relative; display: flex; gap: 16px; width: 100%; padding: 14px 16px 14px 20px; border: 0; border-radius: 16px; background: transparent; color: rgba(255,255,255,.55); font: inherit; text-align: left; cursor: pointer; transition: color .3s, background .4s; }
 html.is-f .f-sc__list button::before { content: ''; position: absolute; left: 0; top: 16px; bottom: 16px; width: 3px; border-radius: 3px; background: var(--lime); transform: scaleY(0); transition: transform .4s var(--ease); }
 html.is-f .f-sc__list button:hover { color: #fff; }
@@ -245,18 +276,6 @@ html.is-f .f-sc__list button.is-on .f-sc__t em { max-height: 70px; opacity: 1; m
 html.is-f .f-sc__bar { position: absolute; z-index: 3; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; display: flex; gap: 6px; width: min(300px, 60vw); }
 html.is-f .f-sc__bar button { flex: 1; height: 3px; padding: 0; border: 0; border-radius: 3px; background: rgba(255,255,255,.18); overflow: hidden; cursor: pointer; }
 html.is-f .f-sc__bar em { display: block; height: 100%; background: var(--lime); transform-origin: 0 50%; }
-html.is-f .f-sc__mtext { display: none; }
-@media (max-width: 1024px) {
-  html.is-f .f-sc__glow { top: 34%; width: 110vw; }
-  html.is-f .f-sc__stage { width: 100%; height: 50vh; top: 70px; bottom: auto; }
-  html.is-f .f-face--sc { height: 100%; width: auto; }
-  html.is-f .f-sc__tag { bottom: 6px; }
-  html.is-f .f-sc__left { left: 20px; right: 20px; width: auto; top: auto; bottom: 120px; translate: none; }
-  html.is-f .f-sc__head, html.is-f .f-sc__left .f-kicker { display: none; }
-  html.is-f .f-sc__num { font-size: 56px; } html.is-f .f-sc__title { font-size: 30px; }
-  html.is-f .f-sc__list { display: none; }
-  html.is-f .f-sc__mtext { display: block; position: absolute; z-index: 3; left: 20px; right: 20px; bottom: 56px; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.8); }
-}
 
 /* design picker (for choosing; removed once you pick) */
 html.is-f .f-pick { position: absolute; z-index: 6; left: 50%; top: 172px; translate: -50% 0; display: flex; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; background: #fff; box-shadow: 0 10px 30px -10px rgba(0,0,0,.6); }
@@ -264,19 +283,6 @@ html.is-f .f-pick span { padding: 0 8px 0 10px; font-size: 11px; font-weight: 70
 html.is-f .f-pick button { padding: 7px 12px; border: 0; border-radius: 999px; background: none; color: #120830; font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; }
 html.is-f .f-pick button.is-on { background: #120830; color: #fff; }
 
-@media (max-width: 1024px) {
-  html.is-f .f-sx__head { top: 78px; } html.is-f .f-sx__title { font-size: 28px; }
-  html.is-f .f-face { height: auto; width: 100%; bottom: 150px; }
-  html.is-f .f-call__lbl button { width: 46vw; padding: 10px 12px; } html.is-f .f-call__lbl button em { display: none; }
-  html.is-f .f-call__lbl--l button { left: auto !important; right: 0; } html.is-f .f-call__lbl--r button { right: auto; left: 0 !important; }
-  html.is-f .f-call__wires { display: none; }
-  html.is-f .f-face--tabs { bottom: 170px; }
-  html.is-f .f-tabs__bar { flex-wrap: wrap; justify-content: center; border-radius: 22px; } html.is-f .f-tabs__bar button { padding: 9px 12px; font-size: 12.5px; }
-  html.is-f .f-bw__info { left: 20px; right: 20px; width: auto; bottom: 70px; } html.is-f .f-bw__count { right: 20px; bottom: 24px; } html.is-f .f-bw__count span { display: none; }
-  html.is-f .f-pick { top: 150px; }
-  html.is-f .f-pick span { display: none; }
-}
-@media (max-width: 1024px) { html.is-f .f-sx__head .f-kicker { display: none; } }
 
 /* ==========================================================
    The original content, in this site's design
@@ -347,28 +353,6 @@ html.is-f .f-plan__list li { display: flex; gap: 8px; } html.is-f .f-plan__list 
 
 
 /* phones: a normal scrolling page */
-html.is-f.is-f-m, html.is-f.is-f-m body { height: auto; overflow: visible; overscroll-behavior: auto; }
-html.is-f .f-mslot { position: relative; min-height: 100svh; }
-html.is-f .f-mslot .f-sec { position: relative; inset: auto; min-height: 100svh; }
-@media (max-width: 860px) {
-  html.is-f .f-care__row, html.is-f .f-about__grid, html.is-f .f-feat__grid, html.is-f .f-an__grid { grid-template-columns: 1fr; }
-  html.is-f .f-about__list, html.is-f .f-an__steps { grid-template-columns: 1fr; }
-  html.is-f .f-an__img { height: 44vh; }
-  html.is-f .f-feat__show { order: -1; } html.is-f .f-feat__art, html.is-f .f-feat__art > * { max-height: none; }
-  html.is-f .f-mslot .f-price__in { position: relative; inset: auto; padding: 96px 20px 50px; min-height: 100svh; }
-  html.is-f .f-mslot .f-plans { grid-template-columns: 1fr; } html.is-f .f-mslot .f-plan__list { display: grid; }
-  html.is-f .f-mslot .f-final__wrap { position: relative; inset: auto; min-height: 100svh; display: flex; flex-direction: column; padding: 110px 20px calc(76px + env(safe-area-inset-bottom, 0px)); }   /* room for the floating next button */
-  html.is-f .f-mslot .f-final__in { position: relative; left: auto; top: auto; bottom: auto; flex: 1; padding-bottom: 48px; }
-  html.is-f .f-mslot .f-foot { position: relative; left: auto; bottom: auto; translate: none; width: auto; max-width: none; }
-  html.is-f .f-foot__pill { position: relative; width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 14px; padding: 16px; border-radius: 22px; white-space: normal; }
-  html.is-f .f-foot__sep { display: none; }
-  html.is-f .f-foot__contact, html.is-f .f-socials { grid-column: 1 / -1; }
-  html.is-f .f-foot__contact { flex-wrap: wrap; gap: 6px 14px; }
-  html.is-f .f-socials { justify-content: space-between; padding-top: 12px; box-shadow: 0 -1px 0 rgba(255,255,255,.1); }
-  html.is-f .f-foot__top { grid-row: 1; grid-column: 2; }
-  html.is-f .f-mslot .f-sc { min-height: 100svh; }
-  html.is-f .f-big--m { font-size: 40px; }
-}
 
 /* ==========================================================
    Features — a card carousel
@@ -395,18 +379,9 @@ html.is-f .f-car__dots { position: absolute; z-index: 3; left: 50%; bottom: calc
 html.is-f .f-car__dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 8px; background: rgba(255,255,255,.3); cursor: pointer; transition: width .4s var(--ease), background .3s; }
 html.is-f .f-car__dots button.is-on { width: 28px; background: var(--lime); }
 
-@media (max-width: 860px) {
-  html.is-f .f-mslot .f-car { min-height: 100svh; }
-  html.is-f .f-car__top { left: 20px; right: 20px; top: 90px; flex-direction: column; align-items: flex-start; gap: 14px; }
-  html.is-f .f-car__top .f-big--m { font-size: 36px; }
-  html.is-f .f-car__nav button { width: 40px; height: 40px; }
-  html.is-f .f-car__stage { top: 290px; bottom: 60px; }
-  html.is-f .f-car__txt p { -webkit-line-clamp: 4; }
-}
 html.is-f .f-car__card:not(.is-on) .f-car__txt { visibility: hidden; }
 html.is-f .f-car__card:not(.is-on) .f-car__art { margin-bottom: 12px; }
 html.is-f .f-car__card { width: min(600px, 40vw); }
-@media (max-width: 860px) { html.is-f .f-car__card { width: 82vw; } }
 
 /* ==========================================================
    Features — three creative layouts, turned by the scroll
@@ -458,14 +433,6 @@ html.is-f .f-wh__art > * { width: 100%; height: 100%; }
 html.is-f .f-wh__show h3 { margin: 20px 0 8px; font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 30px; }
 html.is-f .f-wh__show p { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,.78); }
 
-@media (max-width: 860px) {
-  html.is-f .f-fx { min-height: 100svh; }
-  html.is-f .f-fx__head { left: 20px; right: 20px; top: 84px; } html.is-f .f-fx__head .f-big--m { font-size: 34px; }
-  html.is-f .f-pick--fx { display: none; }
-  html.is-f .f-deck { inset: 190px 20px 60px; grid-template-columns: 1fr; grid-template-rows: 1fr auto; gap: 18px; }
-  html.is-f .f-deck__text { order: 2; } html.is-f .f-deck__pile { order: 1; max-height: 330px; }
-  html.is-f .f-ft__num { font-size: 50px; } html.is-f .f-ft__title { font-size: 28px; margin: 6px 0; } html.is-f .f-ft__text { font-size: 14px; }
-}
 /* fixes: picker placement, big-title balance, wheel inside the screen */
 html.is-f .f-pick--fx { left: auto; translate: none; top: auto; right: clamp(70px, 7vw, 130px); bottom: 56px; }
 html.is-f .f-tt__word { font-size: min(21vw, 40vh); top: 54%; }
@@ -481,14 +448,6 @@ html.is-f .f-an__panel { position: relative; aspect-ratio: 16 / 10; border-radiu
 html.is-f .f-an__panel > div { position: absolute; right: 0; top: 0; bottom: 0; width: 60%; background-size: auto 120%; background-position: 50% 18%; background-repeat: no-repeat; }
 html.is-f .f-an__big { position: absolute; left: 26px; bottom: 6px; font-family: var(--display); font-size: clamp(90px, 9vw, 150px); line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--lime); }
 html.is-f .f-an__of { position: absolute; left: 28px; top: 24px; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #fff; padding: 7px 12px; border-radius: 999px; background: rgba(18,8,48,.5); }
-@media (max-width: 860px) {
-  html.is-f .f-tt__card { left: 50%; top: 54%; width: 70vw; }
-  html.is-f .f-tt__word { font-size: 26vw; top: 40%; }
-  html.is-f .f-tt__info { left: 20px; right: 20px; width: auto; bottom: 60px; }
-  html.is-f .f-tt__count { display: none; }
-  html.is-f .f-wh__wheel { display: none; }
-  html.is-f .f-wh__show { left: 20px; right: 20px; width: auto; top: 200px; translate: none; }
-}
 html.is-f .f-wh__wheel { top: 60%; }
 html.is-f .f-wh__show .f-an__big { margin: 0; font-size: clamp(90px, 9vw, 150px); line-height: 1; color: transparent; }
 
@@ -550,13 +509,6 @@ html.is-f .f-hw__chip b { font-family: var(--display); font-size: 40px; font-wei
 html.is-f .f-hw__chip span { margin-top: 4px; font-size: 13.5px; color: rgba(255,255,255,.8); }
 html.is-f .f-hw__chip:nth-child(2) { margin-left: 40px; }
 
-@media (max-width: 860px) {
-  html.is-f .f-hw { min-height: 100svh; }
-  html.is-f .f-hw__phone { top: 200px; translate: none; height: 420px; margin-left: calc(420px * -9 / 37); }
-  html.is-f .f-hw__time { position: absolute; left: 20px; right: 20px; width: auto; top: 650px; translate: none; gap: 18px; }
-  html.is-f .f-hw__chips { display: none; }
-  html.is-f .f-mslot .f-hw { min-height: 980px; }
-}
 html.is-f .ph-sub { margin-top: 4px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #6a5f8f; }
 html.is-f .ph-recent { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: #fff; font-size: 12px; }
 html.is-f .ph-recent b { flex: 1; font-weight: 600; } html.is-f .ph-recent em { font-style: normal; font-size: 11px; color: #6a5f8f; }
@@ -602,14 +554,6 @@ html.is-f .f-ev__num i { width: 40px; height: 1px; background: var(--lime); }
 html.is-f .f-ev__title { margin: 18px 0 20px; font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(48px, 5vw, 88px); line-height: .92; }
 html.is-f .f-ev__quote { font-family: var(--font-head); font-size: clamp(19px, 1.6vw, 26px); line-height: 1.45; color: rgba(255,255,255,.85); }
 
-@media (max-width: 860px) {
-  html.is-f .f-care2 { min-height: 100svh; }
-  html.is-f .f-cols { left: 20px; right: 20px; top: 190px; bottom: 60px; flex-direction: column; }
-  html.is-f .f-col__side { rotate: 0deg; left: 80px; translate: 0; bottom: auto; top: 34px; }
-  html.is-f .f-col__num { font-size: 50px; } html.is-f .f-col__body b { font-size: 28px; } html.is-f .f-col__body em { font-size: 14px; }
-  html.is-f .f-pan__panel { grid-template-columns: 1fr; padding: 0 20px; } html.is-f .f-pan__num { font-size: 120px; }
-  html.is-f .f-ev__img { width: 100%; opacity: .35 !important; } html.is-f .f-ev__txt { left: 20px; right: 20px; width: auto; }
-}
 html.is-f .f-care2 .f-pick--fx { top: auto; bottom: 16px; }
 
 /* step images in the How Evera works designs */
@@ -627,11 +571,6 @@ html.is-f .f-pan__img { position: relative; z-index: 1; width: min(560px, 38vw);
 html.is-f .f-ev__txt { top: 54%; }
 html.is-f .f-ev__title { font-size: clamp(42px, 4.2vw, 74px); margin: 14px 0 14px; }
 html.is-f .f-ev__card { margin-top: 26px; width: min(420px, 30vw); aspect-ratio: 16 / 10; }
-@media (max-width: 860px) {
-  html.is-f .f-col__open { grid-template-columns: 1fr; } html.is-f .f-col__img { display: none; }
-  html.is-f .f-pan__img { width: 80vw; margin-left: 0; } html.is-f .f-pan__visual .f-pan__num { display: none; }
-  html.is-f .f-ev__card { width: 100%; }
-}
 
 /* How Evera works — panels, cleaned up */
 html.is-f .f-pan { top: 180px; bottom: 64px; }
@@ -642,11 +581,6 @@ html.is-f .f-pan__txt .f-pan__num { display: block; position: static; translate:
 html.is-f .f-pan__word { margin-bottom: 12px; }
 html.is-f .f-pan__txt h3 { margin-bottom: 16px; font-size: clamp(38px, 3.6vw, 60px); }
 html.is-f .f-pan__text { font-size: 16.5px; }
-@media (max-width: 860px) {
-  html.is-f .f-pan__panel { grid-template-columns: 1fr; gap: 24px; align-content: center; padding: 0 20px; }
-  html.is-f .f-pan__txt .f-pan__num { font-size: 70px; margin-bottom: 10px; }
-  html.is-f .f-pan__txt h3 { font-size: 30px; }
-}
 
 /* ==========================================================
    Who we are — a manifesto
@@ -665,13 +599,6 @@ html.is-f .f-mf__arch { position: absolute; z-index: 2; right: clamp(70px, 7vw, 
 html.is-f .f-mf__archin { width: 100%; height: 100%; transform-origin: 50% 70%; display: grid; }
 html.is-f .f-mf__archin > * { width: 100%; height: 100%; }
 html.is-f .f-mf__archin img { object-fit: cover; }
-@media (max-width: 860px) {
-  html.is-f .f-mf { min-height: 100svh; }
-  html.is-f .f-mf__arch { right: 20px; left: 20px; width: auto; height: 34vh; top: 170px; bottom: auto; border-radius: 160px 160px 24px 24px; }
-  html.is-f .f-mf__main { left: 20px; right: 20px; width: auto; top: auto; bottom: 70px; translate: none; }
-  html.is-f .f-mf__say { font-size: 24px; }
-  html.is-f .f-mf__tabs { margin-bottom: 18px; gap: 6px 14px; } html.is-f .f-mf__tabs button { font-size: 11px; }
-}
 
 /* ==========================================================
    Who we are — three static designs
@@ -720,12 +647,6 @@ html.is-f .f-stm__col::before { content: ''; position: absolute; left: 0; top: 0
 html.is-f .f-stm__col h3 { margin: 8px 0 6px; font-size: 18px; font-weight: 600; }
 html.is-f .f-stm__col p { font-size: 14.5px; line-height: 1.55; color: rgba(255,255,255,.75); }
 
-@media (max-width: 860px) {
-  html.is-f .f-pick--who { display: none; }
-  html.is-f .f-who { min-height: 100svh; }
-  html.is-f .f-bento { position: relative; inset: auto; padding: 96px 20px 40px; grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-template-areas: "title title" "img img" "w0 w0" "w1 w1" "w2 w2" "w3 lime"; }
-  html.is-f .f-bento__img { height: 260px; }
-}
 html.is-f .f-stm__pill { background-color: #8f74f0; background-size: 120% auto; background-position: 50% 12%; background-repeat: no-repeat; }
 
 /* Who we are — bento with the full image in the centre */
@@ -739,10 +660,6 @@ html.is-f .f-bento__title { justify-content: flex-end; }
 html.is-f .f-bento__w--0 { grid-area: w0; } html.is-f .f-bento__w--1 { grid-area: w1; }
 html.is-f .f-bento__w--2 { grid-area: w2; } html.is-f .f-bento__w--3 { grid-area: w3; }
 html.is-f .f-bento__w--1 { background: rgba(255,255,255,.07); } html.is-f .f-bento__w--2 { background: rgba(188,172,255,.16); } html.is-f .f-bento__w--3 { background: rgba(255,255,255,.07); }
-@media (max-width: 860px) {
-  html.is-f .f-bento { grid-template-columns: 1fr 1fr; grid-template-areas: "title title" "img img" "w0 w0" "w1 w1" "w2 w2" "w3 lime"; }
-  html.is-f .f-bento__img { height: 340px; }
-}
 html.is-f .f-bento__img .live { width: 100%; height: auto; max-height: none; }
 html.is-f .f-bento__img .f-who__img { width: 100%; height: auto; }
 html.is-f .f-bento__img { background: transparent; backdrop-filter: none; padding: 0; overflow: visible; }
@@ -759,11 +676,6 @@ html.is-f .f-bento__img { padding: 0; overflow: hidden; display: grid; place-ite
 html.is-f .f-bento__img .f-who__img { box-shadow: none; border-radius: 0; width: 100%; max-width: 440px; height: auto; background: transparent; }
 html.is-f .f-bento__n { margin-bottom: 0; }
 html.is-f .f-bento__w h3 { margin-top: auto; padding-top: 18px; }
-@media (max-width: 860px) {
-  html.is-f .f-bento { position: relative; inset: auto; padding: 96px 20px 40px; }
-  html.is-f .f-bento__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "img" "w0" "w1" "w2" "w3"; }
-  html.is-f .f-bento__img { height: auto; }
-}
 html.is-f .f-bento__img .f-who__img { -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000 72%, transparent 100%); mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000 72%, transparent 100%); }
 /* the app image without its own background, sitting straight on the tile */
 html.is-f .f-bento__img { background: radial-gradient(90% 70% at 50% 40%, rgba(188,172,255,.55), rgba(146,89,255,.28) 55%, rgba(86,25,204,.22) 100%) !important; backdrop-filter: blur(14px); }
@@ -773,10 +685,6 @@ html.is-f .f-bento__img > img { width: 88%; max-width: 460px; height: auto; max-
 html.is-f .f-bento__grid { grid-template-columns: auto 1fr 1fr; grid-template-rows: 1fr 1fr; grid-template-areas: "img w0 w1" "img w2 w3"; }
 html.is-f .f-bento__photo { grid-area: img; height: 100%; aspect-ratio: 1056 / 1102; border-radius: 24px; overflow: hidden; box-shadow: 0 50px 100px -40px rgba(0,0,0,.85); }
 html.is-f .f-bento__photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 860px) {
-  html.is-f .f-bento__grid { grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "img" "w0" "w1" "w2" "w3"; }
-  html.is-f .f-bento__photo { height: auto; width: 100%; }
-}
 
 /* ==========================================================
    Free AI test analysis — six steps as one connected path
@@ -810,16 +718,6 @@ html.is-f .f-path__step h3 { margin: 18px 0 8px; font-size: 18px; font-weight: 6
 html.is-f .f-path__step:hover h3 { color: var(--lime); }
 html.is-f .f-path__step p { font-size: 14px; line-height: 1.55; color: rgba(255,255,255,.72); max-width: 32ch; }
 
-@media (max-width: 860px) {
-  html.is-f .f-jp { min-height: 100svh; }
-  html.is-f .f-jp__grid { position: relative; inset: auto; padding: 190px 20px 50px; grid-template-columns: 1fr; }
-  html.is-f .f-jp__card { height: 340px; }
-  html.is-f .f-path { grid-template-columns: 1fr; grid-template-rows: none; height: auto; max-height: none; }
-  html.is-f .f-path__step { grid-column: 1 !important; grid-row: auto !important; padding-left: 64px; }
-  html.is-f .f-path__node { position: absolute; left: 0; top: 0; }
-  html.is-f .f-path__step h3 { margin-top: 10px; }
-  html.is-f .f-path__l { display: none; }
-}
 /* route the turn along the outside edge, clear of step 03's text */
 html.is-f .f-path { padding-right: 40px; }
 html.is-f .f-path__l--1, html.is-f .f-path__l--2 { right: 0; }
@@ -829,34 +727,6 @@ html.is-f .f-path__l--v::after { content: ''; }
 /* ==========================================================
    Phones — flowing layouts (no fixed screen height, no hidden gestures)
    ========================================================== */
-@media (max-width: 860px) {
-  html.is-f .f-mslot { min-height: 0; }
-  html.is-f .f-mslot > .f-sec { min-height: 0; }
-  html.is-f .fm-sec { position: relative; padding: 84px 20px 56px; background: linear-gradient(180deg, #160a3a, #1d0d4a); }
-  html.is-f .fm-sec .f-big--m { font-size: 42px; line-height: .95; }
-  html.is-f .fm-sec .f-big--m { margin-bottom: 22px; }
-
-  /* swipe rows */
-  html.is-f .fm-snap__row { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -20px; padding: 4px 20px 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
-  html.is-f .fm-snap__row::-webkit-scrollbar { display: none; }
-  html.is-f .fm-snap__card { flex: 0 0 84%; scroll-snap-align: center; padding: 10px 10px 20px; border-radius: 22px; background: rgba(255,255,255,.07); }
-  html.is-f .fm-card__img { height: 190px; border-radius: 16px; overflow: hidden; margin-bottom: 16px; }
-  html.is-f .fm-card__num { display: block; margin: 0 8px; font-family: var(--display); font-size: 22px; color: var(--lime); }
-  html.is-f .fm-snap__card h3 { margin: 6px 8px 6px; font-size: 18px; font-weight: 600; }
-  html.is-f .fm-snap__card p { margin: 0 8px; font-size: 14px; line-height: 1.55; color: rgba(255,255,255,.75); }
-  html.is-f .fm-snap__dots { display: flex; justify-content: center; gap: 6px; margin-top: 16px; }
-  html.is-f .fm-snap__dots i { width: 7px; height: 7px; border-radius: 7px; background: rgba(255,255,255,.3); transition: width .3s, background .3s; }
-  html.is-f .fm-snap__dots i.is-on { width: 22px; background: var(--lime); }
-
-  /* face scan */
-  html.is-f .fm-scan__face { position: relative; height: 340px; margin: 0 -20px; overflow: hidden; background: radial-gradient(60% 70% at 50% 60%, rgba(188,172,255,.45), transparent 75%); }
-  html.is-f .fm-face { position: absolute; left: 50%; bottom: 0; translate: -50% 0; height: 100%; width: auto; aspect-ratio: 808 / 768; -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 18%); mask-image: linear-gradient(to top, transparent 0%, #000 18%); }
-  html.is-f .fm-scan__tabs { display: flex; gap: 8px; overflow-x: auto; margin: 18px -20px 0; padding: 0 20px; scrollbar-width: none; }
-  html.is-f .fm-scan__tabs::-webkit-scrollbar { display: none; }
-  html.is-f .fm-scan__tabs button { flex-shrink: 0; padding: 10px 14px; border: 0; border-radius: 999px; background: rgba(255,255,255,.08); color: rgba(255,255,255,.8); font: inherit; font-size: 13px; font-weight: 600; white-space: nowrap; }
-  html.is-f .fm-scan__tabs button.is-on { background: var(--lime); color: #120830; }
-  html.is-f .fm-scan__text { margin-top: 16px; min-height: 3em; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.82); }
-}
 
 /* ==========================================================
    Pricing — three equal cards, huge counting prices
@@ -868,6 +738,12 @@ html.is-f .f-pr__seg button { position: relative; padding: 10px 22px; border: 0;
 html.is-f .f-pr__seg button > span { position: relative; z-index: 1; }
 html.is-f .f-pr__seg button.is-on { color: #120830; }
 html.is-f .f-pr__pill { position: absolute; inset: 0; border-radius: 999px; background: #fff; }
+/* no line anywhere on the switch: no border, outline or highlight shadow in any browser (a lime ring only for keyboard focus) */
+html.is-f .f-pr__seg, html.is-f .f-pr__seg button, html.is-f .f-pr__pill { border: 0 !important; outline: 0; box-shadow: none !important; -webkit-appearance: none; appearance: none; background-clip: padding-box; }
+html.is-f .f-pr__seg button::before, html.is-f .f-pr__seg button::after { content: none !important; }
+html.is-f .f-pr__seg button:focus { outline: 0; }
+html.is-f .f-pr__seg button:focus-visible { box-shadow: 0 0 0 2px #cae751 !important; }
+html.is-f .f-pr__seg button::-moz-focus-inner { border: 0; }
 html.is-f .f-pr__row { position: absolute; z-index: 2; left: clamp(70px, 7vw, 130px); right: clamp(70px, 7vw, 130px); top: 236px; bottom: 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 html.is-f .f-pr__cell { display: flex; min-height: 0; }
 html.is-f .f-pc { flex: 1; display: flex; flex-direction: column; padding: 28px 28px 24px; border-radius: 28px; background: rgba(255,255,255,.07); backdrop-filter: blur(16px); box-shadow: 0 40px 80px -40px rgba(0,0,0,.85); min-height: 0; }
@@ -885,12 +761,6 @@ html.is-f .f-pc__list li { display: flex; gap: 10px; line-height: 1.4; }
 html.is-f .f-pc__list svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: var(--lime); }
 html.is-f .f-pc .f-btn { margin-top: auto; }
 html.is-f .f-pc:not(.is-feat) .f-btn--ghost { background: rgba(255,255,255,.12); color: #fff; }
-@media (max-width: 860px) {
-  html.is-f .fm-pr__seg { margin-bottom: 18px; }
-  html.is-f .fm-snap .f-pc { padding: 22px 20px 20px; border-radius: 22px; }
-  html.is-f .fm-snap__card:has(.f-pc) { padding: 0; background: transparent; display: flex; }
-  html.is-f .f-pc__price b { font-size: 72px; }
-}
 html.is-f .f-pr__head .f-big--m { max-width: none; font-size: clamp(30px, 2.9vw, 50px); }
 html.is-f .f-pr__row { top: 50%; bottom: auto; translate: 0 -38%; align-items: stretch; }
 html.is-f .f-pc__list { flex: 0 1 auto; }
@@ -900,8 +770,14 @@ html.is-f .f-pc .f-btn { margin-top: auto; }
    Testimonials — three compact quotes side by side, heading + row
    centred together. No borders, no light effects.
    ========================================================== */
-html.is-f .f-tm__in { position: absolute; z-index: 2; inset: 0 clamp(70px, 7vw, 130px); padding: 80px 0 40px; display: flex; flex-direction: column; justify-content: safe center; gap: 36px; }
+/* the heading sits at the shared spot (as in the footer); the card row starts at least 36px below it and is
+   centred in the space that remains, so no empty band is left at the bottom */
+html.is-f .f-tm__in { position: absolute; z-index: 2; left: clamp(70px, 7vw, 130px); right: clamp(70px, 7vw, 130px); top: 104px; bottom: 40px; padding: 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 0; }
 html.is-f .f-tm .f-fx__head { position: static; }
+@media (min-width: 1024px) {
+  html.is-f .f-tm .f-fx__head { margin: 0 0 36px; }
+  html.is-f .f-tm__in > .f-tm__list { margin-block: auto; }
+}
 html.is-f .f-tm__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: stretch; margin: 0; padding: 0; list-style: none; }
 html.is-f .f-tm__list > li, html.is-f .f-tm__list > li > div { display: flex; min-width: 0; }
 html.is-f .f-tm__list > li > div { flex: 1; }
@@ -931,36 +807,36 @@ html.is-f .f-tm__item:focus-visible .f-tm__av { box-shadow: 0 0 0 3px rgba(202,2
 /* desktop pointers: a soft spotlight that follows the pointer, and a lime ring on the avatar */
 html.is-f .f-tm__item::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .35s var(--ease);
   background: radial-gradient(260px circle at var(--mx) var(--my), rgba(255,255,255,.12), transparent 100%); }
-@media (hover: hover) and (pointer: fine) and (min-width: 861px) and (prefers-reduced-motion: no-preference) {
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
   html.is-f .f-tm__item:hover::before { opacity: 1; }
   html.is-f .f-tm__item:hover .f-tm__av { box-shadow: 0 0 0 3px rgba(202,231,81,.35); }
 }
+/* Who we are cards: the same soft light that follows the pointer, and a faint brighter edge. The cards stay still. */
+html.is-f .f-bento__w { position: relative; isolation: isolate; --mx: 50%; --my: 0%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0); transition: box-shadow .45s var(--ease); }
+html.is-f .f-bento__w > * { position: relative; z-index: 1; }
+html.is-f .f-bento__w::before { content: ''; position: absolute; inset: 0; z-index: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .45s var(--ease);
+  background: radial-gradient(260px circle at var(--mx) var(--my), rgba(255,255,255,.12), transparent 100%); }
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html.is-f .f-bento__w:hover::before { opacity: 1; }
+  html.is-f .f-bento__w:hover { box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 24px 50px -30px rgba(188,172,255,.45); }
+}
 
-@media (max-width: 1100px) and (min-width: 861px) {
+@media (max-width: 1100px) and (min-width: 1024px) {
   html.is-f .f-tm__list { gap: 20px; }
   html.is-f .f-tm__item { padding: 24px; }
   html.is-f .f-tm__item blockquote { font-size: 16.5px; }
 }
 /* short desktop screens (laptops with browser chrome): tighten so the block never runs under the nav */
-@media (max-height: 700px) and (min-width: 861px) {
-  html.is-f .f-tm__in { padding: 84px 0 24px; gap: 26px; }
+@media (max-height: 700px) and (min-width: 1024px) {
+  html.is-f .f-tm__in { bottom: 24px; }
   html.is-f .f-tm__item { padding: 22px 24px; }
   html.is-f .f-tm__num { height: 46px; }
   html.is-f .f-tm__stars { margin: 10px 0 10px; }
   html.is-f .f-tm__item blockquote { font-size: 16.5px; margin-bottom: 18px; }
 }
 
+@media (min-width: 1024px) and (max-height: 800px) { html.is-f .f-tm__in { top: 92px; } }
 /* phones: one flowing column, no fixed height */
-html.is-f .f-tm.is-m { position: relative; overflow: hidden; padding: 84px 20px 56px; }
-html.is-f .f-tm.is-m .f-tm__in { position: relative; inset: auto; padding: 0; display: block; }
-@media (max-width: 860px) {
-  html.is-f .f-tm.is-m .f-big--m { font-size: 42px; line-height: .95; margin-bottom: 26px; }
-  html.is-f .f-tm.is-m .f-tm__list { grid-template-columns: 1fr; gap: 14px; }
-  html.is-f .f-tm.is-m .f-tm__item { padding: 24px 22px; border-radius: 22px; }
-  html.is-f .f-tm.is-m .f-tm__num { height: 44px; }
-  html.is-f .f-tm.is-m .f-tm__stars { margin: 12px 0 12px; }
-  html.is-f .f-tm.is-m blockquote { font-size: 17px; margin-bottom: 20px; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   html.is-f .f-tm__item, html.is-f .f-tm__item blockquote, html.is-f .f-tm__num text, html.is-f .f-tm__av { transition: none; }
@@ -969,32 +845,28 @@ html.is-f .f-tm.is-m .f-tm__in { position: relative; inset: auto; padding: 0; di
 /* ==========================================================
    Contact — a dotted globe on Abu Dhabi beside the form. No borders.
    ========================================================== */
-html.is-f .f-ct__cols { position: absolute; z-index: 2; inset: 96px clamp(70px, 7vw, 130px) 56px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 6vw, 110px); align-items: center; }
-html.is-f .f-ct__left { height: 100%; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-html.is-f .f-ct__right { width: 100%; max-width: 560px; }
+/* the grid spans the same edges as every other section; both columns vertically centred against each other */
+html.is-f .f-ct__cols { position: absolute; z-index: 2; top: 96px; bottom: 40px; left: clamp(70px, 7vw, 130px); right: clamp(70px, 7vw, 130px);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 5vw, 90px); align-items: center; }
+/* left: globe + hint + HQ pill as one block, centred inside its column */
+html.is-f .f-ct__left { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; height: 100%; min-width: 0; }
+/* right: kicker, title, form, socials as one block, starting right after the middle gap */
+html.is-f .f-ct__right { justify-self: start; display: flex; flex-direction: column; width: 100%; max-width: 560px; min-width: 0; }
 
-/* globe */
-html.is-f .f-ct__globe { position: relative; width: 100%; flex: 1 1 auto; min-height: 0; max-height: 680px; }
+/* globe: a square canvas; the sphere (0.42 of it) with its atmosphere and orbit fits inside */
+html.is-f .f-ct__globe { position: relative; flex: none; width: min(100%, 640px, 70vh); aspect-ratio: 1; overflow: hidden; }
 html.is-f .f-ct__globe canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 html.is-f .f-ct__globe canvas.is-drag { cursor: grabbing; }
-html.is-f .f-ct__hint { margin: 0 0 14px; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.4); text-align: center; }
+html.is-f .f-ct__hint { margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.4); text-align: center; }
 
 /* HQ pill */
-html.is-f .f-ct__hqrow { display: flex; justify-content: center; }
-html.is-f .f-ct__hq { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 20px; padding: 12px 24px; border-radius: 999px; background: rgba(146,89,255,.16); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-html.is-f .f-ct__hq p { display: flex; align-items: center; gap: 9px; margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #cae751; }
-html.is-f .f-ct__hq i { width: 7px; height: 7px; border-radius: 50%; background: #cae751; }
-html.is-f .f-ct__hq a { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-size: 17px; font-weight: 500; color: #fff; text-decoration: none; border-radius: 6px; transition: color .25s; }
-html.is-f .f-ct__hq a svg { width: 16px; height: 16px; color: #cae751; }
-html.is-f .f-ct__hq a:hover { color: #cae751; }
-html.is-f .f-ct__hq a:focus-visible { outline: 2px solid #cae751; outline-offset: 4px; }
 
 /* heading */
-html.is-f .f-ct__head .f-kicker { margin-bottom: 14px; }
-html.is-f .f-ct__title { font-size: clamp(44px, 5vw, 76px); margin-bottom: 22px; }
+html.is-f .f-ct__head .f-kicker { margin-bottom: 12px; }
+html.is-f .f-ct__title { font-size: clamp(40px, 4vw, 68px); line-height: .92; margin-bottom: 24px; }
 
 /* form panel */
-html.is-f .f-ct__panel { padding: 26px; border-radius: 28px; background: linear-gradient(150deg, rgba(146,89,255,.3), rgba(86,25,204,.28) 50%, rgba(42,15,79,.34)); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 40px 80px -40px rgba(0,0,0,.85); }
+html.is-f .f-ct__panel { width: 100%; padding: 24px; border-radius: 28px; background: linear-gradient(150deg, rgba(146,89,255,.3), rgba(86,25,204,.28) 50%, rgba(42,15,79,.34)); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 40px 80px -40px rgba(0,0,0,.85); }
 html.is-f .f-ct__ph { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 16px; }
 html.is-f .f-ct__ph h3 { margin: 0; font-family: var(--font-head); font-size: 19px; font-weight: 600; color: #fff; }
 html.is-f .f-ct__ph p { margin: 0; font-size: 13px; color: rgba(255,255,255,.6); }
@@ -1005,7 +877,7 @@ html.is-f .f-cf--area { grid-column: 1 / -1; }
 html.is-f .f-cf__box { position: relative; border-radius: 14px; background: rgba(10,4,30,.45); transition: box-shadow .25s; }
 html.is-f .f-cf__icon { position: absolute; left: 15px; top: 19px; width: 18px; height: 18px; color: rgba(255,255,255,.5); pointer-events: none; transition: color .25s; }
 html.is-f .f-cf input, html.is-f .f-cf textarea { display: block; width: 100%; height: 56px; margin: 0; padding: 24px 14px 8px 44px; border: 0; border-radius: 14px; background: transparent; color: #fff; font-family: var(--font-head); font-size: 15px; outline: none; }
-html.is-f .f-cf textarea { height: 120px; padding-top: 27px; padding-bottom: 24px; line-height: 1.45; resize: none; }
+html.is-f .f-cf textarea { height: 110px; padding-top: 27px; padding-bottom: 24px; line-height: 1.45; resize: none; }
 html.is-f .f-cf input:-webkit-autofill { -webkit-box-shadow: inset 0 0 0 100px #1d0f44; -webkit-text-fill-color: #fff; caret-color: #fff; }
 html.is-f .f-cf label { position: absolute; left: 44px; top: 18px; max-width: calc(100% - 56px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 15px; line-height: 20px; color: rgba(255,255,255,.6); pointer-events: none; transform-origin: 0 0; transition: transform .2s var(--ease), color .2s; }
 html.is-f .f-cf input:focus + label, html.is-f .f-cf input:not(:placeholder-shown) + label,
@@ -1036,40 +908,516 @@ html.is-f .f-ct__doneT { margin: 22px 0 10px; font-family: var(--display); font-
 html.is-f .f-ct__done p:last-child { margin: 0; max-width: 30ch; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.75); }
 
 /* follow row */
-html.is-f .f-ct__follow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 20px; }
+html.is-f .f-ct__follow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 18px; }
 html.is-f .f-ct__follow > span { white-space: nowrap; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
 
 /* shorter desktop screens: tighten the right column so it stays on one screen */
-@media (max-height: 800px) and (min-width: 861px) {
-  html.is-f .f-ct__cols { inset: 84px clamp(70px, 7vw, 130px) 28px; }
+@media (max-height: 800px) and (min-width: 1024px) {
+  html.is-f .f-ct__globe { width: min(100%, 540px, 64vh); }
   html.is-f .f-ct__head .f-kicker { margin-bottom: 8px; }
-  html.is-f .f-ct__title { font-size: clamp(40px, 4vw, 56px); margin-bottom: 14px; }
-  html.is-f .f-ct__panel { padding: 20px 22px; }
+  html.is-f .f-ct__title { font-size: clamp(36px, 3.6vw, 56px); margin-bottom: 14px; }
+  html.is-f .f-ct__panel { padding: 20px; }
   html.is-f .f-ct__ph { margin-bottom: 12px; }
   html.is-f .f-ct__fields { gap: 8px; }
   html.is-f .f-cf input { height: 50px; padding-top: 21px; } html.is-f .f-cf label { top: 15px; } html.is-f .f-cf__icon { top: 16px; }
-  html.is-f .f-cf textarea { height: 86px; padding-top: 24px; }
+  html.is-f .f-cf textarea { height: 84px; padding-top: 24px; }
   html.is-f .f-ct__send { margin-top: 10px; padding: 13px 22px; }
   html.is-f .f-ct__follow { margin-top: 12px; }
   html.is-f .f-ct__done { padding: 26px 10px; }
 }
 
 /* phones: one flowing column */
-html.is-f .f-ct.is-m { position: relative; overflow: hidden; padding: 84px 20px 48px; }
-html.is-f .f-ct__m { position: relative; z-index: 1; }
-@media (max-width: 860px) {
-  html.is-f .f-ct.is-m .f-ct__title { font-size: 46px; }
-  html.is-f .f-ct.is-m .f-ct__panel { padding: 20px 18px; border-radius: 24px; }
-  html.is-f .f-ct.is-m .f-ct__fields { grid-template-columns: minmax(0, 1fr); }
-  html.is-f .f-ct.is-m .f-cf input, html.is-f .f-ct.is-m .f-cf textarea { font-size: 16px; }
-  html.is-f .f-ct.is-m .f-ct__follow { flex-direction: column; align-items: flex-start; gap: 12px; margin: 24px 0 28px; }
-  html.is-f .f-ct.is-m .f-ct__hq { padding: 12px 20px; }
-  html.is-f .f-ct.is-m .f-ct__hq a { font-size: 16px; }
-  html.is-f .f-ct.is-m .f-ct__globe { flex: none; height: 380px; max-height: none; margin-top: 10px; }
-  html.is-f .f-ct.is-m .f-ct__hint { margin: 0; }
-}
 @media (prefers-reduced-motion: reduce) {
   html.is-f .f-ct__send::after { animation: none !important; }
   html.is-f .f-cf__box, html.is-f .f-cf label, html.is-f .f-cf__icon { transition: none; }
 }
 
+/* ==========================================================
+   The form button's light streak, on every text button of the site: the exact same
+   ::after layer and fCtSweep animation as .f-ct__send (one pass, left to right, on hover).
+   ========================================================== */
+html.is-f .f-btn, html.is-f .ev-btn, html.is-f .ev-pillbtn, html.is-f .h-pa__chip { position: relative; overflow: hidden; }
+html.is-f .f-btn::after, html.is-f .ev-btn::after, html.is-f .ev-pillbtn::after, html.is-f .h-pa__chip::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.6), transparent); transform: skewX(-20deg); opacity: 0; pointer-events: none; }
+html.is-f .f-btn:hover:not(:disabled)::after, html.is-f .ev-btn:hover::after, html.is-f .ev-pillbtn:hover::after, html.is-f .h-pa__chip:hover::after { animation: fCtSweep .8s var(--ease); }
+@media (prefers-reduced-motion: reduce) {
+  html.is-f .f-btn::after, html.is-f .ev-btn::after, html.is-f .ev-pillbtn::after, html.is-f .h-pa__chip::after { animation: none !important; }
+}
+
+
+/* ==========================================================
+   Download the Evera app: header button, store buttons, the "Get the Evera app" modal
+   ========================================================== */
+/* header: the shared lime primary button (with its light sweep), as tall as the Menu pill */
+html.is-f .ev-nav__dl { height: 46px; padding: 0 20px 0 18px; gap: 9px; font-size: 13.5px; }
+html.is-f .ev-nav__dl svg { width: 17px; height: 17px; }
+html.is-f .ev-nav__dl-s { display: none; }
+
+/* store buttons: black, 48px (40px small), radius 14px, store logo + two lines */
+html.is-f .store-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+html.is-f .store-btn { --h: 48px; position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; height: var(--h); padding: 0 16px 0 13px; border-radius: 14px;
+  background: #000; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); color: #fff; text-decoration: none; white-space: nowrap; transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease; }
+html.is-f .store-btn svg { flex: none; width: 24px; height: 24px; }
+html.is-f .store-btn span { display: grid; line-height: 1.05; text-align: left; }
+html.is-f .store-btn small { font-family: var(--font-head); font-size: 10px; font-weight: 500; letter-spacing: .02em; color: rgba(255,255,255,.85); }
+html.is-f .store-btn b { font-family: var(--font-head); font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+html.is-f .store-btn--sm { --h: 40px; padding: 0 12px 0 10px; gap: 8px; border-radius: 12px; }
+html.is-f .store-btn--sm svg { width: 20px; height: 20px; }
+html.is-f .store-btn--sm small { font-size: 8.5px; } html.is-f .store-btn--sm b { font-size: 14px; }
+html.is-f .store-btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.3), 0 14px 26px -14px rgba(0,0,0,.9); }
+html.is-f .store-btn:focus-visible { outline: 2px solid #cae751; outline-offset: 3px; }
+/* the same light sweep as the other buttons */
+html.is-f .store-btn::after { content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent); transform: skewX(-20deg); opacity: 0; pointer-events: none; }
+html.is-f .store-btn:hover::after { animation: fCtSweep .8s var(--ease); }
+
+/* the modal: the site's modal shell, two columns (store button + QR code) */
+html.is-f .dl-modal { width: min(100% - 32px, 560px); text-align: center; }
+html.is-f .dl-modal .modal__in { padding: 38px 32px 32px; }
+html.is-f .dl-modal__mark { display: block; height: 44px; width: auto; margin: 0 auto 14px; }
+html.is-f .dl-modal .modal__title { margin: 0 0 6px; font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 40px; line-height: .95; color: #fff; }
+html.is-f .dl-modal .modal__text { margin: 0 0 26px; }
+html.is-f .dl-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+html.is-f .dl-col { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 14px 16px; border-radius: 20px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+html.is-f .dl-qr { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+html.is-f .dl-qr__code { display: block; width: 132px; height: 132px; padding: 8px; border-radius: 14px; background: #fff; }
+html.is-f .dl-qr__code svg { display: block; width: 100%; height: 100%; }
+html.is-f .dl-qr > span:last-child { font-size: 12.5px; color: rgba(255,255,255,.6); }
+
+/* full-screen menu: the store buttons under a small heading */
+html.is-f .ev-menu__get { margin-top: 26px; }
+html.is-f .ev-menu__get-h { margin: 0 0 12px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+
+/* footer: the store buttons at the bottom of the first card */
+html.is-f .f-fo__stores { gap: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-f .store-btn { transition: none; } html.is-f .store-btn:hover { transform: none; } html.is-f .store-btn::after { animation: none !important; }
+}
+
+/* ==========================================================================================================
+   SMALL SCREENS — the only small-screen rules of the site (≥ 1024px is the desktop slider and is not touched here).
+   Principle: the same design, resized. The same components, elements, styles and interactions as desktop; only
+   smaller sizes, and side-by-side columns stacked in the desktop reading order when they do not fit.
+   Tablet 768–1023px · Phone ≤ 767px (phone values override the tablet ones further down).
+   Navigation (App.jsx, useSmallScreen): the page scrolls natively with gentle snapping. The step sections
+   (How it works, Face scan, Features) are sticky scenes: N screens tall, the content pinned, the scroll picks the step.
+   ========================================================================================================== */
+
+/* ---------------------------------------- 1 · TABLET AND PHONE (≤ 1023px) ---------------------------------------- */
+@media (max-width: 1023px) {
+  /* design tokens */
+  html.is-f {
+    --pad: 32px; --s-gap: 24px; --in-gap: 12px; --head-h: 64px;
+    --title: clamp(30px, 6vw, 48px); --body: 15px; --card-t: 17px;
+    --btn-h: 44px; --btn-px: 20px; --btn-fs: 14.5px; --btn-ic: 15px; --btn-sm-h: 36px; --store-h: 44px;
+    --card-r: 22px; --card-p: 22px; --vis-max: 40svh; --who-img: 34svh;
+  }
+
+  /* navigation model: the page scrolls; no fixed track, no locks */
+  html.is-f { scroll-snap-type: y proximity; scroll-behavior: smooth; scroll-padding-top: 0; }
+  html.is-f, html.is-f body { height: auto; overflow: visible; overscroll-behavior: auto; }
+  html.is-f body { overflow-x: clip; }
+  html.is-f #main.f-viewport { position: relative; inset: auto; height: auto; overflow: visible; overflow-x: clip; }
+  html.is-f .f-track { position: relative; inset: auto; transform: none !important; will-change: auto; }
+  html.is-f .f-slot { height: auto; min-height: 100svh; overflow: visible; scroll-snap-align: start; }
+
+  /* every section (except the hero): in flow, as tall as its content, the blocks stacked on the rhythm */
+  html.is-f .f-sec:not(.ev-hero) { position: relative; inset: auto; height: auto; min-height: 100svh; overflow: clip; display: flex; flex-direction: column; gap: var(--s-gap);
+    padding: calc(var(--head-h) + 24px + env(safe-area-inset-top, 0px)) max(var(--pad), env(safe-area-inset-right, 0px)) calc(48px + env(safe-area-inset-bottom, 0px)) max(var(--pad), env(safe-area-inset-left, 0px)); }
+  /* decorative layers stay behind, absolute, never in the way */
+  html.is-f .f-sec > .f-bgimg, html.is-f .f-sec > .f-shade, html.is-f .f-sec > .f-sc__glow { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  html.is-f .f-sc__glow { width: auto; aspect-ratio: auto; translate: none; border-radius: 0; background: radial-gradient(60% 40% at 50% 55%, rgba(188,172,255,.3), transparent 100%); }
+  html.is-f .f-sec:not(.ev-hero) > :not(.f-bgimg):not(.f-shade):not(.f-sc__glow):not(.f-fx__bar):not(.f-sc__bar) { position: relative; z-index: 2; }
+
+  /* section wrappers: no absolute positioning, no fixed sizes */
+  html.is-f .f-fx__head, html.is-f .f-pr__head, html.is-f .f-bento, html.is-f .f-jp__grid, html.is-f .f-tm__in, html.is-f .f-pr__row,
+  html.is-f .f-ct__cols, html.is-f .f-fo__in { position: relative; inset: auto; left: auto; right: auto; top: auto; bottom: auto; translate: none; width: auto; height: auto; max-height: none; margin: 0; padding: 0; }
+  html.is-f .f-bento, html.is-f .f-tm__in, html.is-f .f-fo__in, html.is-f .f-jp__grid, html.is-f .f-ct__cols { display: flex; flex-direction: column; gap: var(--s-gap); }
+
+  /* type */
+  html.is-f .f-big--m, html.is-f .f-fx__head .f-big--m, html.is-f .f-pr__head .f-big--m, html.is-f .f-ct__title { font-size: var(--title); line-height: .95; max-width: none; margin: 0; }
+  html.is-f .f-mask { padding-block: .05em; }
+  html.is-f .f-kicker { font-size: 12px; margin: 0 0 10px; }
+  html.is-f .f-bento__w p, html.is-f .f-path__step p, html.is-f .f-jp__cardtxt p:not(.f-big), html.is-f .f-fo__about, html.is-f .f-fo__addr, html.is-f .f-pc__list,
+  html.is-f .f-pan__text, html.is-f .f-ft__text, html.is-f .f-ct__done p:last-child { font-size: var(--body); line-height: 1.6; }
+  html.is-f .f-bento__w h3, html.is-f .f-path__step h3, html.is-f .f-fo__card h3, html.is-f .f-ct__ph h3 { font-size: var(--card-t); }
+  /* small text: 12px at least */
+  html.is-f .h-pa__who > span:not(.f-ec__wave), html.is-f .f-sc__tag, html.is-f .f-pc__top em, html.is-f .f-ct__hint, html.is-f .f-cf__count, html.is-f .store-btn small { font-size: 12px; }
+
+  /* buttons: smaller, the same styles and light sweep */
+  html.is-f .f-btn, html.is-f .ev-btn, html.is-f .f-ct__send { height: var(--btn-h); padding: 0 var(--btn-px); gap: 8px; font-size: var(--btn-fs); }
+  html.is-f .f-btn svg, html.is-f .ev-btn svg, html.is-f .f-ct__send svg { width: var(--btn-ic); height: var(--btn-ic); }
+  html.is-f .f-btn--sm { height: var(--btn-sm-h); padding: 0 16px; font-size: 13px; }
+  html.is-f .f-ct__send { margin-top: var(--in-gap); }
+  html.is-f .store-btn, html.is-f .store-btn--sm { --h: var(--store-h); }
+  html.is-f .store-btn--sm b { font-size: 15px; }
+  html.is-f .store-btn span { line-height: 1.2; }
+
+  /* touch targets ≥ 44px */
+  html.is-f .socials a, html.is-f .socials--sm a { --s: 44px; }
+  html.is-f .h-listen { width: 44px; height: 44px; padding: 9px; margin: -9px -9px -9px -5px; background-clip: content-box; }
+  html.is-f .h-pa__chip, html.is-f .f-pr__seg button, html.is-f .f-fo__nav button, html.is-f .f-fo__links a, html.is-f .f-fo__links button { min-height: 44px; }
+  html.is-f .f-fo__tel { min-height: 44px; }
+
+  /* cards: smaller padding and radius, the same content */
+  html.is-f .f-bento__t, html.is-f .f-tm__item, html.is-f .f-pc, html.is-f .f-fo__card, html.is-f .f-ct__panel, html.is-f .f-jp__card { border-radius: var(--card-r); padding: var(--card-p); }
+
+  /* fixed UI: the header scaled; the right dots stay (tablet); the progress line and the down arrow (below) */
+  html.is-f .ev-nav > .ev-nav__bar { height: calc(var(--head-h) + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) max(var(--pad), env(safe-area-inset-right, 0px)) 0 max(var(--pad), env(safe-area-inset-left, 0px)); }
+  html.is-f .ev-nav__logo img { height: 18px; }
+  html.is-f .ev-nav__acts { gap: 8px; }
+  html.is-f .ev-nav__dl { height: var(--btn-sm-h); padding: 0 14px; gap: 7px; font-size: 13px; white-space: nowrap; }
+  html.is-f .ev-nav__dl svg { width: 15px; height: 15px; }
+  html.is-f .ev-pillbtn { height: 36px; gap: 8px; padding: 0 4px 0 14px; font-size: 13px; white-space: nowrap; }
+  html.is-f .ev-pillbtn__ic { width: 28px; height: 28px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i { left: 7px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:first-child { top: 10.5px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:last-child { top: 15.5px; }
+  html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:first-child, html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:last-child { top: 13px; }
+  html.is-f .f-dots { right: 10px; }
+  html.is-f .f-progress { display: none; }               /* it would sit on the text column (no desktop gutter here) */
+  /* the down arrow: on the hero, at the right edge just above the chat (on the long scrolling sections it would sit over the text) */
+  html.is-f .f-next { left: auto; right: max(var(--pad), env(safe-area-inset-right, 0px)); bottom: calc(var(--dock-h, 200px) + 30px + env(safe-area-inset-bottom, 0px)); width: 44px; height: 44px; }
+  html.is-f .f-next:not(.is-hero) { display: none; }
+  /* the full-screen menu: one column */
+  html.is-f .ev-menu__grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; row-gap: var(--s-gap); padding: calc(var(--head-h) + 24px) var(--pad) calc(28px + env(safe-area-inset-bottom, 0px)); }
+  html.is-f .ev-menu__title { font-size: clamp(34px, 9vw, 52px); }
+  html.is-f .ev-menu__num { padding-top: .7em; }
+  html.is-f .ev-menu__item.is-cur .ev-menu__num::after { top: calc(.7em + 18px); }
+  html.is-f .ev-menu__side { justify-self: stretch; max-width: none; }
+  html.is-f .ev-menu__text { min-height: 0; font-size: var(--body); }
+  html.is-f .ev-menu__get { margin-top: 18px; }
+
+  /* ---------- Hero: one screen; the desktop composition, scaled ---------- */
+  html.is-f .f-sec.ev-hero { height: 100vh; height: 100svh; }
+  html.is-f .ev-hero__video { object-position: 50% 18%; }
+  html.is-f .h-pa__shade { background:
+    linear-gradient(90deg, rgba(7,2,26,.72) 0%, rgba(7,2,26,.32) 45%, rgba(7,2,26,0) 72%),
+    linear-gradient(to top, rgba(7,2,26,.94) 0%, rgba(7,2,26,.74) 38%, rgba(7,2,26,0) 62%),
+    linear-gradient(to bottom, rgba(7,2,26,.55) 0%, rgba(7,2,26,0) 18%); }
+  /* the text block bottom-left, just above the chat (--dock-h: the chat's measured height, EveraHero.jsx) */
+  html.is-f .ev-head { left: var(--pad); right: var(--pad); top: auto; bottom: calc(var(--dock-h, 200px) + 32px + env(safe-area-inset-bottom, 0px)); translate: none; max-width: 600px; }
+  html.is-f .ev-hi { font-size: 14px; margin-bottom: var(--in-gap); }
+  html.is-f .ev-hi__dna, html.is-f .ev-hi__dna img { height: 26px; }
+  html.is-f .ev-title { font-size: clamp(34px, 9.5vw, 64px); line-height: .96; }
+  html.is-f .ev-lede { margin: var(--in-gap) 0 16px; max-width: 36ch; font-size: var(--body); line-height: 1.55; }
+  /* the chat: full width at the bottom, its suggestions in one row that scrolls sideways when they do not fit */
+  html.is-f .ev-dock { left: var(--pad); right: var(--pad); width: auto; translate: none; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
+  html.is-f .h-pa__card { padding: 12px 14px 14px; border-radius: 18px; }
+  html.is-f .h-pa__who { margin-bottom: 10px; } html.is-f .h-pa__q { margin-bottom: 6px; }
+  html.is-f .h-pa__text { min-height: 3em; font-size: 14px; line-height: 1.5; }
+  html.is-f .h-pa__chips { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; }
+  html.is-f .h-pa__chips::-webkit-scrollbar { display: none; }
+  html.is-f .h-pa__chip { flex: none; }
+
+  /* ---------- the step sections: sticky scenes with the desktop elements, stacked in the desktop reading order ---------- */
+  /* every step of every step section takes the same scroll: 40% of the screen height */
+  html.is-f .f-slot--steps { --step-scroll: 40svh; height: calc(100svh + var(--steps) * var(--step-scroll)); }
+  html.is-f .f-slot--steps > .f-sec:not(.ev-hero) { position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 0; overflow: hidden; gap: var(--in-gap); padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+  /* the step indicator stays where desktop has it: the bar at the bottom, scaled */
+  html.is-f .f-fx__bar, html.is-f .f-sc__bar { z-index: 3; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  /* the large outlined step numbers: a full line box, so they never touch the title above or below */
+  html.is-f .f-pan__num, html.is-f .f-sc__num, html.is-f .f-ft__num { line-height: 1; }
+  html.is-f .f-sc__left, html.is-f .f-deck { margin-top: 4px; }
+
+  /* How it works: the film strip of panels (image, then the outlined number, the step word, title and text) */
+  html.is-f .f-pan { position: relative; inset: auto; flex: 1 1 auto; min-height: 0; margin: 0 calc(-1 * var(--pad)); overflow: hidden; }
+  html.is-f .f-pan__track { height: 100%; align-items: flex-start; }
+  html.is-f .f-pan__panel { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 16px; padding: 8px var(--pad) 0; }
+  html.is-f .f-pan__img { width: min(100% - 8px, calc(var(--vis-max) * 4 / 3)); max-width: none; height: auto; aspect-ratio: 4 / 3; margin: 0 auto; justify-self: center; }
+  html.is-f .f-pan__txt { gap: 8px; max-width: none; }
+  html.is-f .f-pan__num { font-size: clamp(56px, 12vw, 96px); }
+  html.is-f .f-pan__txt h3 { font-size: clamp(24px, 5.5vw, 40px); }
+
+  /* Features: the text (number, title, text), then the card deck */
+  html.is-f .f-deck { position: relative; inset: auto; display: flex; flex-direction: column; gap: 16px; flex: 1 1 0; min-height: 0; }
+  html.is-f .f-ft__num { font-size: clamp(52px, 11vw, 90px); }
+  html.is-f .f-ft__title { margin: 8px 0 6px; font-size: clamp(24px, 5.5vw, 40px); }
+  html.is-f .f-ft__text { max-width: 60ch; }
+  /* the visual takes the height left in the scene (never more than --vis-max), whole, its proportions kept */
+  html.is-f .f-deck__pile { flex: 1 1 0; min-height: 0; width: auto; max-width: calc(100% - 34px); height: auto; max-height: var(--vis-max); aspect-ratio: 5 / 4; align-self: center; margin: 0 0 44px; translate: -8px 0; }   /* room under it for the cards that peek out below the top one */
+
+  /* Face scan: the number and title (left), the face (centre), the list (right), the bar at the bottom */
+  html.is-f .f-sc__left { position: relative; left: auto; top: auto; translate: none; width: auto; }
+  html.is-f .f-sc__num { font-size: clamp(48px, 10vw, 84px); }
+  html.is-f .f-sc__title { margin-top: 6px; font-size: clamp(22px, 5vw, 36px); }
+  html.is-f .f-sc__stage { position: relative; left: auto; bottom: auto; translate: none; width: 100%; height: auto; flex: 1 1 0; min-height: 0; max-height: var(--vis-max); }
+  html.is-f .f-face--sc { position: relative; left: auto; bottom: auto; translate: none; display: block; height: 100%; width: auto; max-width: 100%; margin: 0 auto; }
+  html.is-f .f-sc__tag { bottom: 10px; }
+  html.is-f .f-sc__list { position: relative; right: auto; top: auto; translate: none; width: auto; gap: 2px; }
+  html.is-f .f-sc__list button { padding: 10px 14px; gap: 12px; }
+
+  /* ---------- About: cards 01 02, the image, cards 03 04 ---------- */
+  html.is-f .f-bento__head { position: relative; grid-area: auto; padding: 0; }
+  html.is-f .f-bento__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-template-areas: none; gap: var(--in-gap); height: auto; margin: 0; }
+  html.is-f .f-bento__grid > * { grid-area: auto; min-width: 0; }
+  html.is-f .f-bento__w--0 { order: 1; } html.is-f .f-bento__w--1 { order: 2; } html.is-f .f-bento__photo { order: 3; grid-column: 1 / -1; } html.is-f .f-bento__w--2 { order: 4; } html.is-f .f-bento__w--3 { order: 5; }
+  html.is-f .f-bento__photo { display: grid; place-items: center; height: auto; }
+  html.is-f .f-bento__photo img { display: block; width: 100%; height: auto; max-height: var(--who-img); object-fit: contain; }
+  html.is-f .f-bento__t { min-height: 0; height: auto; }
+  html.is-f .f-bento__n { font-size: 34px; }
+  html.is-f .f-bento__w h3 { margin: 12px 0 6px; }
+
+  /* ---------- Free analysis: the Evera card (left), then the six steps of the path (right) with its line ---------- */
+  html.is-f .f-jp__card { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+  html.is-f .f-jp__photo { position: relative; inset: auto; height: min(36svh, 300px); background-size: contain; background-position: 50% 100%; -webkit-mask-image: none; mask-image: none; }
+  html.is-f .f-jp__cardtxt { position: relative; left: auto; right: auto; bottom: auto; padding: 0 var(--card-p) var(--card-p); gap: 8px; }
+  html.is-f .f-jp__cardtxt .f-big { margin-bottom: 4px; }
+  html.is-f .f-path { --node: 44px; --step-gap: 20px; display: flex; flex-direction: column; gap: var(--step-gap); height: auto; max-height: none; padding: 0; }
+  html.is-f .f-path__l { display: none; }
+  html.is-f .f-path__step { padding: 0 0 0 60px; min-height: var(--node); }
+  html.is-f .f-path__node { position: absolute; left: 0; top: 0; }
+  html.is-f .f-path__step h3 { margin: 10px 0 6px; }
+  html.is-f .f-path__step p { max-width: none; }
+  html.is-f .f-path__step:not(:last-child)::before { content: ''; position: absolute; left: calc(var(--node) / 2 - 1px); top: calc(var(--node) + 4px); bottom: calc(4px - var(--step-gap)); width: 2px; border-radius: 2px;
+    background: linear-gradient(var(--lime), rgba(202,231,81,.25)); }
+
+  /* ---------- card rows (Testimonials, Pricing): three across would be under 260px each, so 2 + 1 ---------- */
+  html.is-f .f-tm__list, html.is-f .f-pr__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  html.is-f .f-tm__list > li:last-child:nth-child(odd), html.is-f .f-pr__row > :last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px); }
+  html.is-f .f-tm .f-fx__head { margin: 0; }
+  html.is-f .f-tm__item blockquote { font-size: 17px; margin-bottom: 20px; }
+
+  /* ---------- Pricing: the heading, the Monthly / Yearly switch, the plans, each complete ---------- */
+  html.is-f .f-pr__head { display: flex; flex-direction: column; align-items: flex-start; gap: var(--in-gap); }
+  html.is-f .f-pr__row { align-items: stretch; }
+  html.is-f .f-pr__cell { min-height: 0; }
+  html.is-f .f-pc__list { flex: 1 0 auto; }
+  html.is-f .f-pc__price b { font-size: clamp(56px, 9vw, 80px); }
+
+  /* ---------- Contact: the heading, form and socials (right column), then the globe (left column) ---------- */
+  html.is-f .f-ct__right { order: 1; display: flex; flex-direction: column; gap: var(--s-gap); max-width: none; width: 100%; }
+  html.is-f .f-ct__left { order: 2; height: auto; width: 100%; gap: 8px; }
+  html.is-f .f-ct__globe { width: min(100%, 420px); }
+  html.is-f .f-ct__hint { position: static; }
+  html.is-f .f-ct__follow { margin: 0; }
+  html.is-f .f-ct__ph { margin-bottom: var(--in-gap); }
+  /* inputs: 16px (no zoom on iOS), 44px high */
+  html.is-f .f-cf input { height: 44px; padding: 17px 14px 3px 44px; font-size: 16px; }
+  html.is-f .f-cf textarea { height: 104px; padding: 22px 14px 20px 44px; font-size: 16px; }
+  html.is-f .f-cf label { top: 12px; }
+  html.is-f .f-cf__icon { top: 13px; }
+
+  /* ---------- Footer: the heading, the cards (2 + 1), the bottom line stacked and centred, the wordmark last ---------- */
+  html.is-f .f-fo .f-fx__head { margin: 0; }
+  html.is-f .f-fo__mid { margin: 0; }
+  html.is-f .f-fo__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  html.is-f .f-fo__cards > :last-child { grid-column: 1 / -1; }
+  html.is-f .f-fo__stores { flex-wrap: wrap; }
+  html.is-f .f-fo__bar { flex-direction: column; justify-content: center; gap: 8px; margin: 0; text-align: center; }
+  html.is-f .f-fo__meta { flex-wrap: wrap; justify-content: center; }
+  html.is-f .f-fo__word { flex: none; min-height: 0; height: clamp(56px, 16vw, 140px); margin: 0; }
+}
+
+/* short screens (≤ 1023px wide, ≤ 800px tall): the step scenes' visuals a little smaller so each scene fits one screen */
+@media (max-width: 1023px) and (max-height: 800px) {
+  html.is-f { --vis-max: 33svh; }
+}
+
+/* ---------------------------------------- 2 · PHONE (≤ 767px) ---------------------------------------- */
+@media (max-width: 767px) {
+  html.is-f {
+    --pad: 18px; --s-gap: 20px; --title: clamp(28px, 8.5vw, 36px); --body: 14.5px; --card-t: 16px;
+    --btn-h: 40px; --btn-px: 16px; --btn-fs: 14px; --btn-ic: 14px; --btn-sm-h: 34px; --store-h: 40px;
+    --card-r: 20px; --card-p: 18px; --who-img: 28svh;
+  }
+  html.is-f .f-tm__item blockquote { font-size: 16px; }
+
+  /* card rows: one under another */
+  html.is-f .f-tm__list, html.is-f .f-pr__row, html.is-f .f-fo__cards { grid-template-columns: minmax(0, 1fr); }
+  html.is-f .f-tm__list > li:last-child:nth-child(odd), html.is-f .f-pr__row > :last-child:nth-child(odd) { width: auto; justify-self: stretch; }
+
+  /* the right dots would sit on the text: no side gutter on phones */
+  html.is-f .f-dots { display: none; }
+
+  /* the hero chat: 16px from the edges */
+  html.is-f .ev-dock { left: 16px; right: 16px; }
+
+  /* Contact: the fields one under another */
+  html.is-f .f-ct__fields { grid-template-columns: minmax(0, 1fr); }
+
+  /* the download modal: one column */
+  html.is-f .dl-grid { grid-template-columns: minmax(0, 1fr); }
+  html.is-f .dl-modal .modal__title { font-size: 34px; }
+}
+
+/* About on narrow phones: the four cards in one column, the image between 02 and 03 */
+@media (max-width: 399px) {
+  html.is-f .f-bento__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* short phones: the hero paragraph goes first; then the chat shows only its latest message */
+@media (max-width: 767px) and (max-height: 799px) { html.is-f .ev-lede { display: none; } }
+@media (max-width: 767px) and (max-height: 700px) {
+  html.is-f .h-pa__chips, html.is-f .h-pa__q { display: none; }
+  html.is-f .h-pa__text { min-height: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+}
+
+/* the narrowest phones: "Download app" becomes "Get app" */
+@media (max-width: 379px) { html.is-f .ev-nav__dl-l { display: none; } html.is-f .ev-nav__dl-s { display: inline; } }
+
+/* =====================================================================================================
+   RESPONSIVE FIXES — targeted fixes only; the design stays the same (≥ 1280px is not affected)
+   ===================================================================================================== */
+
+/* 1 · Small laptops (1024–1279px, the desktop slider): content that was too big for the screen */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  html.is-f .f-bento__t { padding: 16px; }
+  html.is-f .f-bento__n { font-size: 32px; }
+  html.is-f .f-bento__w h3 { padding-top: 10px; font-size: 15px; }
+  html.is-f .f-bento__w p { font-size: 12.5px; line-height: 1.45; }
+  html.is-f .f-deck { inset: 190px calc(clamp(70px, 7vw, 130px) + 36px) 70px clamp(70px, 7vw, 130px); grid-template-columns: 1fr 1fr; gap: 4vw; }
+  html.is-f .f-deck__pile { max-height: 440px; }
+}
+
+/* 2 · Smaller buttons on tablets and phones (same styles, same light sweep) */
+@media (max-width: 1023px) {
+  html.is-f { --btn-h: 40px; --btn-px: 18px; --btn-fs: 14px; --btn-ic: 14px; --btn-sm-h: 34px; --store-h: 40px; }
+  html.is-f .ev-pillbtn { height: 34px; }
+  html.is-f .ev-pillbtn__ic { width: 26px; height: 26px; }
+}
+@media (max-width: 767px) {
+  html.is-f { --btn-h: 38px; --btn-px: 15px; --btn-fs: 13.5px; --btn-ic: 13px; --btn-sm-h: 32px; --store-h: 38px; }
+  html.is-f .f-btn--sm { font-size: 12.5px; padding: 0 13px; }
+  html.is-f .ev-pillbtn { height: 32px; font-size: 12.5px; padding-left: 12px; }
+  html.is-f .ev-pillbtn__ic { width: 24px; height: 24px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i { left: 6px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:first-child { top: 9.5px; }
+  html.is-f .ev-pillbtn--menu .ev-pillbtn__ic i:last-child { top: 13.5px; }
+  html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:first-child, html.is-f .ev-pillbtn--menu.is-open .ev-pillbtn__ic i:last-child { top: 11.5px; }
+  html.is-f .ev-nav__dl { padding: 0 12px; font-size: 12.5px; }
+}
+
+/* 3 · Hero on phones: the suggested questions wrap onto a second line instead of being cut at the edge */
+@media (max-width: 767px) {
+  html.is-f .h-pa__chips { flex-wrap: wrap; overflow: visible; gap: 6px; }
+  html.is-f .h-pa__chip { min-height: 32px; padding: 6px 11px; font-size: 12.5px; }
+}
+
+/* 4 · About on tablets and phones: cards 01 + 02, a larger image, cards 03 + 04 */
+@media (max-width: 1023px) {
+  html.is-f { --who-img: 46svh; }
+}
+@media (max-width: 767px) {
+  html.is-f { --who-img: 40svh; }
+  html.is-f .f-bento__t { padding: 14px; }
+  html.is-f .f-bento__n { font-size: 28px; }
+  html.is-f .f-bento__w h3 { margin: 10px 0 4px; font-size: 15px; }
+  html.is-f .f-bento__w p { font-size: 13px; line-height: 1.5; }
+}
+@media (max-width: 399px) {
+  html.is-f .f-bento__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 339px) {
+  html.is-f .f-bento__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 5 · Short phones (≤ 740px tall): the step scenes scale to the screen height, so nothing is cut */
+@media (max-width: 767px) and (max-height: 740px) {
+  html.is-f { --vis-max: 29svh; --title: clamp(24px, 7vw, 30px); }
+  html.is-f .f-slot--steps > .f-sec:not(.ev-hero) { padding-top: calc(var(--head-h) + 12px + env(safe-area-inset-top, 0px)); padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
+  html.is-f .f-slot--steps .f-kicker { margin-bottom: 6px; }
+  html.is-f .f-pan__panel { gap: 10px; }
+  html.is-f .f-pan__num { font-size: 44px; }
+  html.is-f .f-pan__txt { gap: 4px; }
+  html.is-f .f-pan__txt h3 { font-size: 22px; }
+  html.is-f .f-pan__text { font-size: 13.5px; line-height: 1.5; }
+  html.is-f .f-sc__num { font-size: 40px; }
+  html.is-f .f-sc__title { margin-top: 2px; font-size: 20px; }
+  html.is-f .f-sc__stage { flex: 0 0 auto; height: var(--vis-max); min-height: 24svh; }
+  html.is-f .f-sc__list button { padding: 6px 12px; }
+  html.is-f .f-ft__num { font-size: 40px; }
+  html.is-f .f-ft__title { margin: 4px 0; font-size: 22px; }
+  html.is-f .f-ft__text { font-size: 13.5px; line-height: 1.5; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+  html.is-f .f-deck { gap: 10px; }
+}
+
+/* =====================================================================================================
+   LAYOUT REFINEMENT (≤ 1023px) — How it works, Face scan, Features, About: the visuals as large as the screen allows,
+   each step's number beside its title (a compact header), so the scene reads top to bottom: heading, step header,
+   the visual filling the free height, the text, the bar. ≥ 1024px is not affected.
+   ===================================================================================================== */
+@media (max-width: 1023px) {
+  /* the step header: the outlined number beside the step's title */
+  html.is-f .f-pan__txt, html.is-f .f-ft, html.is-f .f-sc__left > div { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; row-gap: 6px; align-items: center; }
+  html.is-f .f-pan__num, html.is-f .f-ft__num, html.is-f .f-sc__num { font-size: clamp(44px, 7svh, 64px); line-height: 1; }
+  html.is-f .f-pan__num { grid-row: 1 / span 2; }
+  html.is-f .f-pan__word { grid-column: 2; align-self: end; margin: 0; }
+  html.is-f .f-pan__txt h3 { grid-column: 2; align-self: start; margin: 0; }
+  html.is-f .f-pan__text, html.is-f .f-ft__text { grid-column: 1 / -1; margin: 4px 0 0; }
+  html.is-f .f-ft__title, html.is-f .f-sc__title { margin: 0; }
+  html.is-f .f-pan__txt h3, html.is-f .f-ft__title, html.is-f .f-sc__title { font-size: clamp(22px, 3.4svh + 1.6vw, 34px); line-height: 1; }
+
+  /* How it works: each panel is the image (filling the free height, its proportions kept), then the text */
+  html.is-f .f-pan__track { align-items: stretch; }
+  html.is-f .f-pan__panel { display: flex; flex-direction: column; height: 100%; justify-content: center; gap: 16px; padding: 4px var(--pad) 0; container-type: inline-size; }   /* image + text centred in the free height */
+  html.is-f .f-pan__img { flex: 1 1 0; min-height: 0; width: auto; max-width: none; height: auto; max-height: calc(100cqw * 3 / 4); aspect-ratio: 4 / 3; align-self: center; margin: 0; }
+  html.is-f .f-pan__txt { flex: none; gap: 6px 14px; }
+
+  /* Features: the step header and text, then the card deck filling the free height */
+  html.is-f .f-deck { container-type: inline-size; gap: 14px; justify-content: center; }
+  html.is-f .f-deck__text { flex: none; }
+  html.is-f .f-deck__pile { flex: 1 1 0; min-height: 0; width: auto; max-width: none; height: auto; max-height: calc((100cqw - 34px) * 4 / 5); aspect-ratio: 5 / 4; align-self: center; margin-bottom: 60px; }   /* room for the cards peeking out below */
+
+  /* Face scan: the step header, the face filling the free height, the list */
+  html.is-f .f-sc__stage { flex: 1 1 0; min-height: 0; height: auto; max-height: none; container-type: size; }
+  html.is-f .f-face--sc { height: min(100cqh, 100cqw * 768 / 808); width: auto; max-width: none; aspect-ratio: 808 / 768; margin: 0 auto; }
+
+  /* About: the image box takes the image's own proportions (no empty band around it), as large as the screen allows */
+  html.is-f .f-bento__photo { display: block; justify-self: center; width: min(100%, calc(60svh * 1056 / 1102)); height: auto; aspect-ratio: 1056 / 1102; }
+  html.is-f .f-bento__photo img { width: 100%; height: 100%; max-height: none; object-fit: cover; }
+}
+/* Face scan from 480px wide: the four analyses in two columns, so the face gets more of the screen */
+@media (min-width: 480px) and (max-width: 1023px) {
+  html.is-f .f-sc__list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; align-items: start; }
+}
+
+/* =====================================================================================================
+   FEATURES ON SMALL SCREENS (≤ 1023px) — one feature card: the image on top, the number, title and full text in the
+   same card below it. The cards that are stacked behind on desktop are not shown. The progress bar stays at the bottom.
+   ===================================================================================================== */
+@media (max-width: 1023px) {
+  html.is-f .f-deck { gap: 0; justify-content: center; }
+  /* the image part of the card: fills the free height of the scene, never wider than the content */
+  html.is-f .f-deck__pile { order: 1; flex: 1 1 0; min-height: 140px; width: 100%; max-width: 640px; height: auto; max-height: calc(100cqw * .7); aspect-ratio: auto; margin: 0 auto; translate: none; align-self: center; }
+  html.is-f .f-deck__card { padding: 12px 12px 0; border-radius: var(--card-r) var(--card-r) 0 0; box-shadow: none; }
+  html.is-f .f-deck__card:not(.is-top) { visibility: hidden; }
+  /* no throw / swing of the desktop deck here: the card stays in place and the new image fades in, like the text */
+  html.is-f .f-deck__card { transform: none !important; }
+  html.is-f .f-deck__card.is-top { animation: fDeckIn .3s var(--ease) both; }
+  html.is-f .f-deck__cap { display: none; }
+  html.is-f .f-deck__art { border-radius: calc(var(--card-r) - 6px); }
+  /* the text part of the same card */
+  html.is-f .f-deck__text { order: 2; position: relative; flex: none; width: 100%; max-width: 640px; margin: 0 auto; padding: 16px 18px 20px; overflow: hidden;
+    border-radius: 0 0 var(--card-r) var(--card-r); background: #2a1764; box-shadow: 0 40px 80px -30px rgba(0,0,0,.85); }
+  html.is-f .f-ft__text { display: block; -webkit-line-clamp: unset; overflow: visible; max-width: none; }
+}
+@keyframes fDeckIn { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { html.is-f .f-deck__card.is-top { animation: none; } }
+
+/* =====================================================================================================
+   FACE SCAN ON SMALL SCREENS (≤ 1023px) — one analysis card, like the Features card: the face with the analysis
+   overlay on top, the number, title and description in the same card below it. The list of the four analyses is
+   not shown (the progress bar shows the step). The face and the text change together with a 0.3s fade (App.jsx).
+   ===================================================================================================== */
+@media (max-width: 1023px) {
+  html.is-f .f-slot--steps > .f-sec.f-sc:not(.ev-hero) { gap: 0; }     /* the two parts of the card touch */
+  html.is-f .f-sc > .f-fx__head { margin-bottom: 14px; }
+  html.is-f .f-sc__list { display: none; }
+  /* the top of the card: the face, filling the free height */
+  html.is-f .f-sc__stage { order: 2; align-self: center; width: 100%; max-width: 640px; padding: 12px 12px 0; border-radius: var(--card-r) var(--card-r) 0 0; overflow: hidden;
+    background: radial-gradient(70% 80% at 50% 45%, rgba(188,172,255,.32), rgba(188,172,255,0) 70%), #2a1764; }
+  html.is-f .f-sc__tag { bottom: 12px; }
+  /* the bottom of the card: number + title, then the description */
+  html.is-f .f-sc__left { order: 3; align-self: center; width: 100%; max-width: 640px; margin: 0; padding: 14px 18px 20px; border-radius: 0 0 var(--card-r) var(--card-r);
+    background: #2a1764; box-shadow: 0 40px 80px -30px rgba(0,0,0,.85); }
+  html.is-f .f-sc__desc { grid-column: 1 / -1; margin: 4px 0 0; font-size: var(--body); line-height: 1.6; color: rgba(255,255,255,.78); }
+}
+/* Features and Face scan on small screens: every step's text in one spot, only the current one visible */
+@media (max-width: 1023px) {
+  html.is-f .f-ft-stack { display: grid; }
+  html.is-f .f-ft-stack > * { grid-area: 1 / 1; }
+  html.is-f .f-ft-stack > :not(.is-on) { visibility: hidden; }
+  html.is-f .f-sc__left .f-ft-stack > div { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; row-gap: 6px; align-items: center; align-content: start; }
+  html.is-f .f-deck__text .f-ft { align-content: start; }
+}

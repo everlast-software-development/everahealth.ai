@@ -86,31 +86,24 @@ html.is-f .h-pa__chip:hover { background: rgba(255,255,255,.16); color: #fff; }
 html.is-f .h-pa__chip:focus-visible { outline: 2px solid #cae751; outline-offset: 2px; }
 
 /* ---------- desktops and laptops: chat stays bottom centre, headline lifted clear of it ---------- */
-@media (min-width: 861px) {
+@media (min-width: 1024px) {
   html.is-f .ev-head { translate: 0 -60%; }
 }
-@media (min-width: 861px) and (max-width: 1300px) {
+@media (min-width: 1024px) and (max-width: 1300px) {
   html.is-f .ev-title { font-size: clamp(42px, min(4.2vw, 8vh), 80px); }
 }
 /* short laptop screens: tighter headline, chat a little lower */
-@media (min-width: 861px) and (max-height: 800px) {
+@media (min-width: 1024px) and (max-height: 800px) {
   html.is-f .ev-title { font-size: clamp(40px, 4vw, 64px); }
   html.is-f .ev-lede { margin-bottom: 20px; font-size: 15px; }
   html.is-f .ev-dock { bottom: 24px; }
 }
 
-/* ---------- phones: portrait on top, then headline and chat in normal flow ---------- */
-@media (max-width: 860px) {
-  html.is-f .ev-hero.is-m { position: relative; inset: auto; min-height: 0; overflow: hidden; }
-  html.is-f .ev-hero.is-m .ev-hero__stage { inset: 0 0 auto; height: 74svh; -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent); mask-image: linear-gradient(to bottom, #000 60%, transparent); }
-  html.is-f .ev-hero.is-m .h-pa__shade { inset: 0 0 auto; height: 74svh; background: linear-gradient(to top, #07021a 0%, rgba(7,2,26,0) 42%), linear-gradient(to bottom, rgba(7,2,26,.55) 0%, rgba(7,2,26,0) 20%); }
-  html.is-f .ev-hero.is-m .ev-hero__video { object-position: 50% 14%; }
-  html.is-f .ev-hero.is-m .ev-head { position: relative; left: auto; top: auto; translate: none; max-width: none; padding: 52svh 16px 0; }
-  html.is-f .ev-hero.is-m .ev-title { font-size: clamp(40px, 12vw, 56px); }
-  html.is-f .ev-hi { font-size: 14px; }
-  html.is-f .ev-hero.is-m .ev-dock { position: relative; left: auto; bottom: auto; translate: none; width: auto; padding: 26px 16px 84px; }
-  html.is-f .ev-hero.is-m .h-pa__chips { justify-content: flex-start; }
-}
+/* ---------- phones and tablets: the desktop composition, scaled. One full screen; the video fills it with her face
+   in the upper part; the shade darkens the bottom and the left; the headline sits bottom-left above the chat
+   (--dock-h is the chat's measured height, set by EveraHero.jsx); the chat is at the bottom centre ---------- */
+/* short phones: the paragraph goes first; then the chat shows only its latest message (no question tag, no chips) */
+/* landscape phones: the headline on the left, the chat bottom-right, both clear of her face in the middle */
 
 @media (prefers-reduced-motion: reduce) {
   html.is-f .f-ec__wave.is-on i, html.is-f .h-think i, html.is-f .h-caret { animation: none; }

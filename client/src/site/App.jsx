@@ -1,7 +1,6 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion, useReducedMotion, useSpring } from 'framer-motion';
-import { ArrowUpRight, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Upload, TrendingUp, Sparkles, Box, Users, Eye, Activity, Star, Check, Phone, User, Mail, FileText, MessageSquare } from 'lucide-react';
-import { useInView } from 'framer-motion';
+import { ArrowUpRight, ArrowDown, ArrowLeft, ArrowRight, Upload, TrendingUp, Sparkles, Box, Users, Eye, Activity, Star, Check, Phone, User, Mail, FileText, MessageSquare, MapPin } from 'lucide-react';
 import f1 from '../assets/face/img1.webp';
 import f2 from '../assets/face/img2.webp';
 import f3 from '../assets/face/img3.webp';
@@ -15,7 +14,8 @@ import ChartArt from '../components/ChartArt.jsx';
 import LiveImage from '../components/LiveImage.jsx';
 import { BloodArt, BodyArt, SkinArt, MealArt, WalletArt, NutritionArt, OverviewArt } from '../components/FeatureArt.jsx';
 import { Socials } from '../components/ui.jsx';
-import WaitlistModal from '../components/WaitlistModal.jsx';
+import StoreButtons from '../components/StoreButtons.jsx';
+import { DownloadProvider, useDownload } from '../lib/download.jsx';
 import EveraHero from './EveraHero.jsx';
 import EveraHeader from './EveraHeader.jsx';
 import bg from '../assets/video/evera-bg.jpg';
@@ -24,26 +24,8 @@ import landDots from '../assets/globe/land-dots.json';
 import './site.css';
 
 const PUSH = [0.77, 0, 0.18, 1];
-const isPhone = () => typeof window !== 'undefined' && matchMedia('(max-width: 860px)').matches;
-function usePhone() {
-  const [m, setM] = useState(isPhone);
-  useEffect(() => { const q = matchMedia('(max-width: 860px)'); const f = () => setM(q.matches); q.addEventListener('change', f); return () => q.removeEventListener('change', f); }, []);
-  return m;
-}
-/* phones: a row of cards you swipe sideways (native scroll-snap) with dots below */
-function SnapRow({ items, render, label }) {
-  const ref = useRef(null);
-  const [cur, setCur] = useState(0);
-  const onScroll = () => { const el = ref.current; if (!el) return; const w = el.firstElementChild?.getBoundingClientRect().width || 1; setCur(Math.round(el.scrollLeft / (w + 12))); };
-  return (
-    <div className="fm-snap">
-      <div className="fm-snap__row" ref={ref} onScroll={onScroll} role="list" aria-label={label}>
-        {items.map((x, n) => <div key={n} className="fm-snap__card" role="listitem">{render(x, n)}</div>)}
-      </div>
-      <div className="fm-snap__dots" aria-hidden="true">{items.map((x, n) => <i key={n} className={n === cur ? 'is-on' : ''} />)}</div>
-    </div>
-  );
-}   // the section-to-section move
+// the section-to-section move
+
 const E = [0.22, 1, 0.36, 1];
 
 /* a line of big type that rises out of a mask when its section becomes active */
@@ -98,21 +80,10 @@ function CarePanels({ on, i }) {
 }
 
 
-function Care({ on, register, enteredFrom }) {
-  const phone = usePhone();
-  const { i, dir, pick, iRef } = useSteps(on, phone ? null : register, enteredFrom, steps.length);
-  if (phone) return (
-    <div className="fm-sec">
-      <Fade on={on} d={0.1} className="f-kicker" as="p">How Evera works</Fade>
-      <h2 className="f-big f-big--m"><Rise on={on} d={0.15}>Built for better care,</Rise><Rise on={on} d={0.2}><span className="f-grad">powered by AI</span></Rise></h2>
-      <SnapRow label="Steps" items={steps} render={(x, n) => (<>
-        <StepImg n={n} on={on} className="fm-card__img" />
-        <span className="fm-card__num">0{n + 1}</span><h3>{x.title}</h3><p>{x.text}</p>
-      </>)} />
-    </div>
-  );
+function Care({ on, register, enteredFrom, scrollStep, pickStep }) {
+  const { i, dir, pick, iRef } = useSteps(on, register, enteredFrom, steps.length, scrollStep, pickStep);
   return (
-    <div className="f-sec f-care2" {...swipe(pick, iRef)}>
+    <div className="f-sec f-care2">
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
       <div className="f-fx__head">
         <Fade on={on} d={0.1} className="f-kicker" as="p">How Evera works</Fade>
@@ -135,7 +106,13 @@ function WhoBento({ on }) {
         <Fade on={on} d={0.1} className="f-kicker" as="p">About</Fade>
         <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>Who <span className="f-grad">we are</span></Rise></h2>
       </div>
-      <div className="f-bento__grid">
+      {/* the cards' light follows the pointer (as on the Testimonials cards); the cards never move */}
+      <div className="f-bento__grid" onPointerMove={(e) => {
+        const card = e.target.closest?.('.f-bento__w'); if (!card || e.pointerType !== 'mouse') return;
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+        card.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
+      }}>
         <Fade on={on} d={0.25} className="f-bento__photo">
           <img src={whoFull} alt="The Evera app: health metrics, blood tests, body and skin analysis, calorie tracker, medical wallet and personalised plans" />
         </Fade>
@@ -161,31 +138,45 @@ function About({ on }) {
 /* Track your health: seven features with their images */
 const FEATS = [['blood', BloodArt], ['body', BodyArt], ['skin', SkinArt], ['meal', MealArt], ['wallet', WalletArt], ['nutrition', NutritionArt], ['overview', OverviewArt]];
 /* Sections that turn through their items with the scroll, then let the page move on */
-function useSteps(on, register, enteredFrom, N) {
+/* ≥ 1024px: each wheel / swipe gesture moves one step (register), then the page moves on.
+   ≤ 1023px (a sticky scene): the section is N screens tall and the scroll through it picks the step (scrollStep);
+   picking a step scrolls the page to it (pickStep). */
+function useSteps(on, register, enteredFrom, N, scrollStep = null, pickStep = null) {
   const [i, setI] = useState(0);
   const [dir, setDir] = useState(1);
   const iRef = useRef(0); iRef.current = i;
-  useEffect(() => { if (on) setI(enteredFrom > 0 ? N - 1 : 0); }, [on, enteredFrom, N]);
+  useEffect(() => { if (on && scrollStep == null) setI(enteredFrom > 0 ? N - 1 : 0); }, [on, enteredFrom, N, scrollStep]);
+  useEffect(() => { if (scrollStep == null) return; setDir(scrollStep >= iRef.current ? 1 : -1); setI(scrollStep); }, [scrollStep]);
   useEffect(() => {
     if (!on || !register) return;
     register((d) => { const n = iRef.current + d; if (n < 0 || n >= N) return false; setDir(d); setI(n); return true; });
     return () => register(null);
   }, [on, register, N]);
-  const pick = (n) => { setDir(n >= iRef.current ? 1 : -1); setI(Math.max(0, Math.min(N - 1, n))); };
+  const pick = (n) => { if (pickStep) { pickStep(Math.max(0, Math.min(N - 1, n))); return; } setDir(n >= iRef.current ? 1 : -1); setI(Math.max(0, Math.min(N - 1, n))); };
   return { i, dir, pick, iRef };
 }
-const swipe = (pick, iRef) => {
-  let x = null;
-  return {
-    onTouchStart: (e) => { x = e.touches[0].clientX; },
-    onTouchEnd: (e) => { if (x == null) return; const dx = x - e.changedTouches[0].clientX; if (Math.abs(dx) > 40) { e.stopPropagation(); pick(iRef.current + (dx > 0 ? 1 : -1)); } x = null; },
-  };
-};
 const StepBar = ({ items, i, pick }) => <div className="f-fx__bar">{items.map((x, n) => <button key={x.title} className={n <= i ? 'is-on' : ''} onClick={() => pick(n)} aria-label={x.title} />)}</div>;
 
 /* the text block used beside a visual: big outlined number, title, description */
 function StepText({ items, i, dir }) {
   const x = items[i];
+  // ≤ 1023px the steps follow the scroll, often several at once: the new text replaces the old at once (no waiting
+  // for the old one to leave), so the text always matches the card
+  const quick = typeof window !== 'undefined' && matchMedia('(max-width: 1023px)').matches;
+  // all the texts share one spot (only the current one shown), so the block is as tall as the longest text and the
+  // image above it keeps the same size from step to step
+  if (quick) return (
+    <div className="f-ft-stack">
+      {items.map((it, n) => (
+        <motion.div key={it.title} className={`f-ft ${n === i ? 'is-on' : ''}`} aria-hidden={n !== i} initial={false}
+          animate={{ opacity: n === i ? 1 : 0 }} transition={{ duration: n === i ? 0.3 : 0, ease: E }}>
+          <p className="f-ft__num">0{n + 1}</p>
+          <h3 className="f-ft__title">{it.title}</h3>
+          <p className="f-ft__text">{it.text}</p>
+        </motion.div>
+      ))}
+    </div>
+  );
   return (
     <AnimatePresence mode="wait">
       <motion.div key={i} className="f-ft" initial={{ opacity: 0, y: dir * 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: dir * -20 }} transition={{ duration: 0.5, ease: E }}>
@@ -207,7 +198,7 @@ function Deck({ on, items, i, dir }) {
           const k = n - i, gone = k < 0, show = k >= 0 && k <= 3;
           const Art = x.Art;
           return (
-            <motion.div key={x.title} className="f-deck__card" style={{ zIndex: 20 - Math.abs(k) }} initial={false}
+            <motion.div key={x.title} className={`f-deck__card ${k === 0 ? 'is-top' : ''}`} style={{ zIndex: 20 - Math.abs(k) }} initial={false}
               animate={gone ? { y: '-120%', rotate: -14, opacity: 0, scale: 0.9 }
                 : { y: k * 16, x: k * 10, rotate: k === 0 ? 0 : (k % 2 ? 4 : -3) * Math.min(k, 2), scale: 1 - k * 0.05, opacity: !on || !show ? 0 : 1 }}
               transition={{ duration: 0.8, ease: E }}>
@@ -279,21 +270,10 @@ function Wheel({ on, items, i, pick, aside }) {
 
 /* Features: the deck */
 const FEAT_ITEMS = FEATS.map(([key, Art]) => ({ title: features[key].title, text: features[key].text, Art }));
-function Features({ on, register, enteredFrom }) {
-  const phone = usePhone();
-  const { i, dir, pick, iRef } = useSteps(on, phone ? null : register, enteredFrom, FEAT_ITEMS.length);
-  if (phone) return (
-    <div className="fm-sec">
-      <Fade on={on} d={0.1} className="f-kicker" as="p">Features</Fade>
-      <h2 className="f-big f-big--m"><Rise on={on} d={0.15}>Track your health</Rise><Rise on={on} d={0.2}>by <span className="f-grad">Evera AI</span></Rise></h2>
-      <SnapRow label="Features" items={FEAT_ITEMS} render={(x, n) => { const A = x.Art; return (<>
-        <div className="fm-card__img f-stepimg">{on && <A />}</div>
-        <span className="fm-card__num">0{n + 1}</span><h3>{x.title}</h3><p>{x.text}</p>
-      </>); }} />
-    </div>
-  );
+function Features({ on, register, enteredFrom, scrollStep, pickStep }) {
+  const { i, dir, pick, iRef } = useSteps(on, register, enteredFrom, FEAT_ITEMS.length, scrollStep, pickStep);
   return (
-    <div className="f-sec f-fx" {...swipe(pick, iRef)}>
+    <div className="f-sec f-fx">
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
       <div className="f-fx__head">
         <Fade on={on} d={0.1} className="f-kicker" as="p">Features</Fade>
@@ -308,7 +288,7 @@ function Features({ on, register, enteredFrom }) {
 /* Get your free AI test analysis: all six steps at once, as one connected path
    (left to right, down, then right to left). A lime line draws along it on entry. */
 const PATH_POS = [[1, 1], [2, 1], [3, 1], [3, 2], [2, 2], [1, 2]];   // [column, row] for each step
-function Analysis({ on, onJoin }) {
+function Analysis({ on, onDownload }) {
   return (
     <div className="f-sec f-jp">
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
@@ -322,7 +302,7 @@ function Analysis({ on, onJoin }) {
           <div className="f-jp__cardtxt">
             <p className="f-big f-big--s">Evera AI</p>
             <p>Upload a report and get a full AI analysis, free.</p>
-            <button className="f-btn f-btn--sm" onClick={onJoin}>Start free<ArrowUpRight /></button>
+            <button className="f-btn f-btn--sm" onClick={onDownload}>Download the app<ArrowUpRight /></button>
           </div>
         </Fade>
         <div className="f-path">
@@ -347,7 +327,6 @@ function Analysis({ on, onJoin }) {
   );
 }
 
-const DWELL = 4200;   // how long each analysis stays before the next
 
 /* the four face-scan analyses and their images */
 const CAPS = [
@@ -357,25 +336,14 @@ const CAPS = [
   { Icon: Activity, title: 'Tracking the pulse', text: 'Tracks the flow and pulses of blood beneath your skin.', img: f4 },
 ];
 
-function useCycle(on) {
-  const [st, setSt] = useState(0);
-  const [hold, setHold] = useState(false);
-  useEffect(() => { if (on) setSt(0); }, [on]);
-  useEffect(() => {
-    if (!on || hold || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = setTimeout(() => setSt((v) => (v + 1) % CAPS.length), DWELL);
-    return () => clearTimeout(t);
-  }, [on, hold, st]);
-  return { st, pick: (k) => { setSt(k); setHold(true); }, release: () => setHold(false) };
-}
 
 // the face: all four images stacked in one box that keeps the image's proportions
-function Face({ st, children, className = '' }) {
+function Face({ st, children, className = '', fade = 0.8 }) {
   return (
     <div className={`f-face ${className}`}>
       {CAPS.map((c, k) => (
         <motion.img key={k} src={c.img} alt={st === k ? `The face as Evera AI sees it: ${c.title}` : ''} initial={false}
-          animate={{ opacity: st === k ? 1 : 0 }} transition={{ duration: 0.8, ease: 'easeInOut' }} />
+          animate={{ opacity: st === k ? 1 : 0 }} transition={{ duration: fade, ease: 'easeInOut' }} />
       ))}
       {children}
     </div>
@@ -384,46 +352,51 @@ function Face({ st, children, className = '' }) {
 
 /* Face scan: the face in the centre; the current analysis large on the left; the list on the right.
    No scan line: the face softly fades to each analysis. */
-function Scan({ on, register, enteredFrom }) {
-  const phone = usePhone();
-  // phones: the analyses change on their own; desktop: each scroll turns to the next analysis,
-  // and after the fourth the page moves on to the next section
-  const cycle = useCycle(on && phone);
-  const steps4 = useSteps(on, phone ? null : register, enteredFrom, CAPS.length);
-  const st = phone ? cycle.st : steps4.i;
-  const pick = phone ? cycle.pick : steps4.pick;
-  const release = phone ? cycle.release : () => {};
+function Scan({ on, register, enteredFrom, scrollStep, pickStep }) {
+  // each scroll / swipe turns to the next analysis; after the fourth the page moves on to the next section
+  const steps4 = useSteps(on, register, enteredFrom, CAPS.length, scrollStep, pickStep);
+  const st = steps4.i;
+  const pick = steps4.pick;
+  const release = () => {};
   const c = CAPS[st];
-  if (phone) return (
-    <div className="fm-sec fm-scan">
-      <Fade on={on} d={0.1} className="f-kicker" as="p">Face scan</Fade>
-      <h2 className="f-big f-big--m"><Rise on={on} d={0.15}>What you see vs</Rise><Rise on={on} d={0.2}>what <span className="f-grad">Evera AI</span> sees</Rise></h2>
-      <div className="fm-scan__face"><Face st={st} className="fm-face" /></div>
-      <div className="fm-scan__tabs" role="tablist">
-        {CAPS.map((x, k) => <button key={x.title} role="tab" aria-selected={st === k} className={st === k ? 'is-on' : ''} onClick={() => pick(k)}>0{k + 1} · {x.title}</button>)}
-      </div>
-      <AnimatePresence mode="wait"><motion.p key={st} className="fm-scan__text" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>{c.text}</motion.p></AnimatePresence>
-    </div>
-  );
+  // ≤ 1023px (the scroll picks the step): one analysis card; the face and the text change together with a short fade
+  const quick = scrollStep != null;
   return (
     <div className="f-sec f-sc" onMouseLeave={release}>
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} />
       <div className="f-shade f-shade--deep" />
       <div className="f-sc__glow" aria-hidden="true" />
 
-      <div className="f-sc__left">
+      {/* the same heading block (and spot) as the other sections */}
+      <div className="f-fx__head">
         <Fade on={on} d={0.1} className="f-kicker" as="p">Face scan</Fade>
-        <Fade on={on} d={0.15}><h2 className="f-sc__head">What you see vs what <span className="f-grad">Evera AI</span> sees</h2></Fade>
+        <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>What you see vs what <span className="f-grad">Evera AI</span> sees</Rise></h2>
+      </div>
+
+      <div className="f-sc__left">
+        {quick ? (
+          <div className="f-ft-stack">
+            {CAPS.map((it, n) => (
+              <motion.div key={it.title} className={n === st ? 'is-on' : ''} aria-hidden={n !== st} initial={false}
+                animate={{ opacity: on && n === st ? 1 : 0 }} transition={{ duration: n === st ? 0.3 : 0, ease: E }}>
+                <p className="f-sc__num">0{n + 1}</p>
+                <p className="f-sc__title">{it.title}</p>
+                <p className="f-sc__desc">{it.text}</p>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
         <AnimatePresence mode="wait">
           <motion.div key={st} initial={{ opacity: 0, y: 24 }} animate={{ opacity: on ? 1 : 0, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.5, ease: E }}>
             <p className="f-sc__num">0{st + 1}</p>
             <p className="f-sc__title">{c.title}</p>
           </motion.div>
         </AnimatePresence>
+        )}
       </div>
 
       <div className="f-sc__stage">
-        <Face st={st} className="f-face--sc" />
+        <Face st={st} className="f-face--sc" fade={quick ? 0.3 : 0.8} />
         <AnimatePresence mode="wait">
           <motion.p key={st} className="f-sc__tag" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}><i />What Evera sees</motion.p>
         </AnimatePresence>
@@ -440,10 +413,7 @@ function Scan({ on, register, enteredFrom }) {
         ))}
       </ol>
 
-      {/* phones: the description under the title */}
-      <AnimatePresence mode="wait"><motion.p key={st} className="f-sc__mtext" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{c.text}</motion.p></AnimatePresence>
-
-      <div className="f-sc__bar">{CAPS.map((x, k) => <button key={x.title} onClick={() => pick(k)} aria-label={x.title}><motion.em animate={{ scaleX: st >= k ? 1 : 0 }} transition={{ duration: 0.8, ease: E }} /></button>)}</div>
+      <div className="f-sc__bar">{CAPS.map((x, k) => <button key={x.title} className={st === k ? 'is-on' : ''} onClick={() => pick(k)} aria-label={x.title}><motion.em animate={{ scaleX: st >= k ? 1 : 0 }} transition={{ duration: 0.8, ease: E }} /></button>)}</div>
     </div>
   );
 }
@@ -515,13 +485,12 @@ function VoiceCard({ x, k, on, active, hold, run, reduced, tilt, pick }) {
 }
 
 function Voices({ on }) {
-  const phone = usePhone();
   const reduced = useReducedMotion();
   const [act, setAct] = useState(0);
   const [hold, setHold] = useState(false);
   const [run, setRun] = useState(0);          // restarts the progress line after a pause
   const resume = useRef(null);
-  const tilt = !phone && !reduced && finePointer();
+  const tilt = !reduced && finePointer() && matchMedia('(min-width: 1024px)').matches;
   // leaving the section resets it; the cycle only runs while it is on screen and not paused
   useEffect(() => { if (!on) { clearTimeout(resume.current); setAct(0); setHold(false); } }, [on]);
   useEffect(() => {
@@ -533,20 +502,13 @@ function Voices({ on }) {
   const pick = (k) => { clearTimeout(resume.current); setHold(true); setAct(k); };
   const release = () => { clearTimeout(resume.current); resume.current = setTimeout(() => { setHold(false); setRun((r) => r + 1); }, 2000); };
   return (
-    <div className={phone ? 'f-tm is-m' : 'f-sec f-tm'}>
+    <div className="f-sec f-tm">
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
       <div className="f-tm__in">
-        {phone ? (
-          <div>
-            <Fade on={on} d={0.1} className="f-kicker" as="p">Testimonials</Fade>
-            <h2 className="f-big f-big--m"><Rise on={on} d={0.15}>Success stories</Rise><Rise on={on} d={0.2}>from <span className="f-grad">happy clients</span></Rise></h2>
-          </div>
-        ) : (
           <div className="f-fx__head">
             <Fade on={on} d={0.1} className="f-kicker" as="p">Testimonials</Fade>
             <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>Success stories from <span className="f-grad">happy clients</span></Rise></h2>
           </div>
-        )}
         <ol className="f-tm__list" aria-label="Client testimonials" onPointerLeave={release}
           onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) release(); }}>
           {testimonials.map((x, k) => (
@@ -574,36 +536,24 @@ function CountUp({ to }) {
   }, [to]);
   return <>{v}</>;
 }
-function PlanCard({ p, yearly, onJoin }) {
+function PlanCard({ p, yearly, onDownload }) {
   const price = Number(String(yearly ? p.yearly : p.monthly).replace(/[^0-9]/g, '')) || 0;
   return (
     <div className={`f-pc ${p.featured ? 'is-feat' : ''}`}>
       <div className="f-pc__top"><p className="f-pc__name">{p.name}</p>{p.featured && <em>Most popular</em>}</div>
       <p className="f-pc__price"><b><CountUp to={price} /></b><span>AED<br />/ {yearly ? 'year' : 'month'}</span></p>
       <ul className="f-pc__list">{p.features.map((x) => <li key={x}><Check aria-hidden="true" />{x}</li>)}</ul>
-      <button className={`f-btn f-btn--block ${p.featured ? '' : 'f-btn--ghost'}`} onClick={onJoin}>Start free trial<ArrowUpRight /></button>
+      <button className={`f-btn f-btn--block ${p.featured ? '' : 'f-btn--ghost'}`} onClick={onDownload}>Get started<ArrowUpRight /></button>
     </div>
   );
 }
-function Pricing({ on, onJoin }) {
-  const phone = usePhone();
+function Pricing({ on, onDownload }) {
   const [yearly, setYearly] = useState(false);
   const seg = (
     <div className="f-pr__seg" role="radiogroup" aria-label="Billing period">
       {['Monthly', 'Yearly'].map((l) => { const sel = (l === 'Yearly') === yearly; return <button key={l} role="radio" aria-checked={sel} className={sel ? 'is-on' : ''} onClick={() => setYearly(l === 'Yearly')}>{sel && <motion.i layoutId="prseg" className="f-pr__pill" />}<span>{l}</span></button>; })}
     </div>
   );
-  if (phone) {
-    const order = [...plans].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-    return (
-      <div className="fm-sec">
-        <Fade on={on} d={0.1} className="f-kicker" as="p">Pricing</Fade>
-        <h2 className="f-big f-big--m"><Rise on={on} d={0.15}><span className="f-grad">Smart plans</span></Rise><Rise on={on} d={0.2}>for every journey</Rise></h2>
-        <div className="fm-pr__seg">{seg}</div>
-        <SnapRow label="Plans" items={order} render={(p) => <PlanCard p={p} yearly={yearly} onJoin={onJoin} />} />
-      </div>
-    );
-  }
   return (
     <div className="f-sec f-pr">
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
@@ -615,7 +565,7 @@ function Pricing({ on, onJoin }) {
         <Fade on={on} d={0.3}>{seg}</Fade>
       </div>
       <div className="f-pr__row">
-        {plans.map((p, k) => <Fade key={p.name} on={on} d={0.3 + k * 0.1} className="f-pr__cell"><PlanCard p={p} yearly={yearly} onJoin={onJoin} /></Fade>)}
+        {plans.map((p, k) => <Fade key={p.name} on={on} d={0.3 + k * 0.1} className="f-pr__cell"><PlanCard p={p} yearly={yearly} onDownload={onDownload} /></Fade>)}
       </div>
     </div>
   );
@@ -709,7 +659,9 @@ function drawGlobe(ctx, W, H, lonOff, latOff, t) {
     const q = P(v); if (q.z <= 0) continue;
     const a = Math.min(1, q.z / 0.35);
     ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`; disc(q.x, q.y, 2.2);
-    ctx.globalAlpha = a; label(n, q.x + 7, q.y, 'rgba(255,255,255,.85)'); ctx.globalAlpha = 1;
+    // the name sits right of its dot, or left of it when it would run past the canvas edge
+    const tw = ctx.measureText(n).width, lx = q.x + 7 + tw > W - 4 ? q.x - 7 - tw : q.x + 7;
+    ctx.globalAlpha = a; label(n, lx, q.y, 'rgba(255,255,255,.85)'); ctx.globalAlpha = 1;
   }
   // 8 Abu Dhabi: beam, pulse rings, glow, dot and label
   if (hq.z > 0) {
@@ -804,7 +756,6 @@ function CField({ id, label, Icon, type = 'text', area, req, err, auto, children
 }
 
 function Contact({ on }) {
-  const phone = usePhone();
   const { status, error, fields, submit } = useSubmit('/api/contact');
   const [count, setCount] = useState(0);
   const onSubmit = (e) => { e.preventDefault(); submit(Object.fromEntries(new FormData(e.currentTarget))); };
@@ -847,89 +798,136 @@ function Contact({ on }) {
       </AnimatePresence>
     </Fade>
   );
-  const follow = <Fade on={on} d={0.45} className="f-ct__follow"><span>Follow Evera</span><Socials items={socials} className="f-socials" /></Fade>;
-  const hq = (
-    <Fade on={on} d={0.5} className="f-ct__hqrow">
-      <div className="f-ct__hq">
-        <p><i aria-hidden="true" />Evera HQ · {contact.address}</p>
-        <a href={contact.phoneHref}><Phone aria-hidden="true" />{contact.phone}</a>
-      </div>
-    </Fade>
-  );
+  const follow = <Fade on={on} d={0.45} className="f-ct__follow"><span>Follow Evera</span><Socials items={socials} className="f-socials" on={on} delay={0.5} /></Fade>;
   const globe = (<>
     <Fade on={on} d={0.2} className="f-ct__globe"><Globe on={on} /></Fade>
     <p className="f-ct__hint" aria-hidden="true">Drag to spin</p>
   </>);
 
-  if (phone) return (
-    <div className="f-ct is-m">
-      <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
-      <div className="f-ct__m">{head}{panel}{follow}{hq}{globe}</div>
-    </div>
-  );
   return (
     <div className="f-sec f-ct">
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
       <div className="f-ct__cols">
-        <div className="f-ct__left">{globe}{hq}</div>
+        <div className="f-ct__left">{globe}</div>
         <div className="f-ct__right">{head}{panel}{follow}</div>
       </div>
     </div>
   );
 }
 
-function Final({ on, onJoin, go }) {
-  const to = (label) => go?.(SECTIONS.findIndex(([l]) => l === label));
+/* Footer (the last section): a heading, three glass cards with outlined numbers (brand · explore · get in touch)
+   and a bottom line with a live Abu Dhabi clock and the legal links. */
+const EXPLORE = ['How it works', 'Face scan', 'Features', 'Free analysis', 'Pricing', 'Contact'];
+const GST = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Dubai' });
+function useAbuDhabiTime() {
+  const [t, setT] = useState(() => GST.format(new Date()));
+  useEffect(() => { const iv = setInterval(() => setT(GST.format(new Date())), 15000); return () => clearInterval(iv); }, []);
+  return t;
+}
+const PILL_SPRING = { type: 'spring', stiffness: 420, damping: 36 };
+/* Privacy · Terms · Back to top, with a soft pill that slides to the hovered or focused link */
+function FootLinks({ go }) {
+  const [pill, setPill] = useState({ x: 0, w: 0, on: false });
+  const show = (e) => { const a = e.currentTarget; setPill({ x: a.offsetLeft, w: a.offsetWidth, on: true }); };
+  const hide = () => setPill((p) => ({ ...p, on: false }));
   return (
-    <div className="f-sec f-final">
+    <nav className="f-fo__links" aria-label="Legal" onMouseLeave={hide} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) hide(); }}>
+      <motion.span className="f-fo__pill" aria-hidden="true" initial={false}
+        animate={{ x: pill.x, width: pill.w, opacity: pill.on ? 1 : 0 }} transition={{ x: PILL_SPRING, width: PILL_SPRING, opacity: { duration: 0.2 } }} />
+      <a href="#privacy" onMouseEnter={show} onFocus={show}>Privacy</a>
+      <a href="#terms" onMouseEnter={show} onFocus={show}>Terms</a>
+      <button onClick={() => go?.(0)} onMouseEnter={show} onFocus={show}>Back to top ↑</button>
+    </nav>
+  );
+}
+function Final({ on, go }) {
+  const to = (label) => go?.(SECTIONS.findIndex(([l]) => l === label));
+  const [hh, mm] = useAbuDhabiTime().split(':');
+  // the lit wordmark: the pointer's position inside the wordmark's box, as percentages
+  const word = useRef(null);
+  const [lit, setLit] = useState(false);
+  const move = (e) => {
+    const el = word.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+    el.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
+    if (!lit) setLit(true);
+  };
+  const mask = `url(${img['logo-wordmark']})`;
+  return (
+    <div className="f-sec f-fo" onPointerMove={move} onPointerLeave={() => setLit(false)}>
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
-      <div className="f-final__wrap">
-        <div className="f-final__in">
-          <Fade on={on} d={0.05} className="f-kicker">Early access is open</Fade>
-          <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>Track your health</Rise><Rise on={on} d={0.22}>smarter with <span className="f-grad">Evera AI</span></Rise></h2>
-          <Fade on={on} d={0.4} className="f-final__text" as="p">Stay empowered every day with data that works for you, helping you reach your healthiest, most confident self.</Fade>
-          <Fade on={on} d={0.5} className="f-final__acts">
-            <button className="f-btn" onClick={onJoin}>Join the waitlist<ArrowUpRight /></button>
-            <button className="f-final__ghost" onClick={() => to('Contact')}>Talk to our team</button>
-          </Fade>
+      <footer className="f-fo__in">
+        {/* the same heading block (and spot) as the other sections */}
+        <div className="f-fx__head f-fo__head">
+          <Fade on={on} d={0.1} className="f-kicker" as="p">Evera AI</Fade>
+          <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>Stay connected with <span className="f-grad">Evera AI</span></Rise></h2>
         </div>
 
-        <Fade on={on} d={0.65} className="f-foot" as="footer">
-          <div className="f-foot__pill">
-            <div className="f-foot__brand">
-              <img src={img['logo-dna-white']} alt="" aria-hidden="true" />
-              <span><b>Evera AI</b><em><i aria-hidden="true" />Your AI medical assistant</em></span>
-            </div>
-            <span className="f-foot__sep" aria-hidden="true" />
-            <div className="f-foot__contact">
-              <a href={contact.phoneHref}><Phone aria-hidden="true" />{contact.phone}</a>
-              <span>{contact.address}</span>
-            </div>
-            <span className="f-foot__sep" aria-hidden="true" />
-            <Socials items={socials} className="f-socials" />
-            <button className="f-foot__top" onClick={() => go?.(0)} aria-label="Back to top" title="Back to top"><ArrowUp aria-hidden="true" /></button>
-          </div>
-          <p className="f-foot__legal">© 2026 Evera AI<span aria-hidden="true">·</span><a href="#privacy">Privacy policy</a><span aria-hidden="true">·</span><a href="#terms">Terms and conditions</a></p>
+        {/* the cards, vertically centred between the heading and the bottom line */}
+        <div className="f-fo__mid">
+        <div className="f-fo__cards">
+          <Fade on={on} d={0.25} className="f-fo__card f-fo__card--brand">
+            <span className="f-fo__num" aria-hidden="true">01</span>
+            <div className="f-fo__top"><img className="f-fo__logo" src={img['logo-wordmark']} alt="Evera" /></div>
+            <p className="f-fo__about">Your AI medical assistant. Clear answers from your lab results, skin, body and meals.</p>
+            <StoreButtons size="sm" className="f-fo__end f-fo__stores" />
+          </Fade>
+          <Fade on={on} d={0.33} className="f-fo__card">
+            <span className="f-fo__num" aria-hidden="true">02</span>
+            <h3 className="f-fo__top">Explore</h3>
+            <ul className="f-fo__nav">
+              {EXPLORE.map((l) => <li key={l}><button onClick={() => to(l)}><span>{l}</span><ArrowRight aria-hidden="true" /></button></li>)}
+            </ul>
+          </Fade>
+          <Fade on={on} d={0.41} className="f-fo__card">
+            <span className="f-fo__num" aria-hidden="true">03</span>
+            <h3 className="f-fo__top">Get in touch</h3>
+            <a className="f-fo__tel" href={contact.phoneHref}><Phone aria-hidden="true" />{contact.phone}</a>
+            <p className="f-fo__addr"><MapPin aria-hidden="true" />{contact.address}</p>
+            <div className="f-fo__end"><Socials items={socials} className="f-socials socials--sm" on={on} delay={0.5} /></div>
+          </Fade>
+        </div>
+        </div>
+
+        <Fade on={on} d={0.5} className="f-fo__bar">
+          <p className="f-fo__meta">
+            <span>© 2026 Evera AI</span>
+            <i className="f-fo__dot" aria-hidden="true" />
+            <span className="f-fo__clock"><i aria-hidden="true" /><span>Abu Dhabi · {hh}<span className="f-fo__colon">:</span>{mm} GST</span></span>
+          </p>
+          <FootLinks go={go} />
         </Fade>
-      </div>
+        {/* the EVERA signature, centred in the space below the bottom line, lit by a light that follows the pointer */}
+        <motion.div ref={word} className={`f-fo__word ${lit ? 'is-lit' : ''}`} role="img" aria-label="EVERA" style={{ WebkitMaskImage: mask, maskImage: mask }}
+          initial={false} animate={on ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} transition={{ duration: on ? 1.1 : 0.3, ease: E, delay: on ? 0.2 : 0 }}>
+          <span className="f-fo__light" />
+        </motion.div>
+      </footer>
     </div>
   );
 }
 
+/* the sections that turn through steps, and how many */
+const STEP_N = { 'How it works': steps.length, 'Face scan': CAPS.length, 'Features': FEATS.length };
 const SECTIONS = [['Home', EveraHero], ['How it works', Care], ['About', About], ['Face scan', Scan], ['Features', Features], ['Free analysis', Analysis], ['Testimonials', Voices], ['Pricing', Pricing], ['Contact', Contact], ['Join', Final]];
 
-/* phones: a normal scrolling page; each section plays its entrance when it comes into view */
-function MobileSection({ label, C, onJoin, go, ready }) {
-  const ref = useRef(null);
-  const seen = useInView(ref, { once: true, amount: 0.25 });
-  return <section ref={ref} id={`m-${label}`} className="f-mslot" aria-label={label}><C on={seen && ready} go={go} onJoin={onJoin} register={() => {}} enteredFrom={-1} /></section>;
+/* ---------- the navigation model ----------
+   ≥ 1024px: the full-screen slider (one gesture = one section, the track pushes).
+   ≤ 1023px: the page scrolls natively (CSS: scroll snapping, sections grow with their content); the slider's
+   handlers are off, a section is "on" while it is on screen, and go() scrolls to the section. */
+const SMALL_Q = '(max-width: 1023px)';
+function useSmallScreen() {
+  const [m, setM] = useState(() => matchMedia(SMALL_Q).matches);
+  useEffect(() => { const mq = matchMedia(SMALL_Q), f = () => setM(mq.matches); mq.addEventListener('change', f); return () => mq.removeEventListener('change', f); }, []);
+  return m;
 }
 
-export default function App() {
-  const [mobile, setMobile] = useState(() => matchMedia('(max-width: 860px)').matches);
-  useEffect(() => { const m = matchMedia('(max-width: 860px)'); const f = () => setMobile(m.matches); m.addEventListener('change', f); return () => m.removeEventListener('change', f); }, []);
+function Site() {
+  const small = useSmallScreen();
+  const [vis, setVis] = useState([]);           // ≤ 1023px: which sections are on screen
+  const [sstep, setSstep] = useState({});       // ≤ 1023px: the step each step section's scroll has reached
   const [cur, setCur] = useState(0);
-  const [modal, setModal] = useState(false);
   // false while the preloader in index.html covers the page; it fires "evera:loaded" when it hands over
   const [ready, setReady] = useState(() => !window.__evera?.loading);
   useEffect(() => {
@@ -945,9 +943,44 @@ export default function App() {
   const [entered, setEntered] = useState(1);   // direction we arrived from
   const curRef = useRef(0); curRef.current = cur;
   useEffect(() => { document.documentElement.classList.add('is-f', 'talk-dark'); }, []);
+  // ≤ 1023px: sections play their entrance when they come on screen; the current one is under the upper middle
+  useEffect(() => {
+    if (!small) { scrollTo(0, 0); return undefined; }
+    const slots = [...document.querySelectorAll('.f-slot')];
+    slots[curRef.current]?.scrollIntoView({ block: 'start' });
+    const io = new IntersectionObserver((es) => setVis((v) => { const n = [...v]; es.forEach((e) => { n[slots.indexOf(e.target)] = e.isIntersecting; }); return n; }),
+      { rootMargin: '-10% 0px -20% 0px' });
+    slots.forEach((x) => io.observe(x));
+    const onScroll = () => {
+      const y = innerHeight * 0.4; const k = slots.findIndex((x) => { const b = x.getBoundingClientRect(); return b.top <= y && b.bottom > y; }); if (k >= 0 && k !== curRef.current) setCur(k);
+      // a step section: its progress (0 at its top, 1 when its last screen is reached) picks the step
+      setSstep((prev) => {
+        let next = prev;
+        slots.forEach((x, idx) => {
+          const n = +x.dataset.steps; if (!n) return;
+          const b = x.getBoundingClientRect(), p = Math.min(1, Math.max(0, -b.top / Math.max(1, b.height - innerHeight)));
+          const st = Math.min(n - 1, Math.floor(p * n));
+          if (prev[idx] !== st) { if (next === prev) next = { ...prev }; next[idx] = st; }
+        });
+        return next;
+      });
+    };
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    return () => { io.disconnect(); removeEventListener('scroll', onScroll); setVis([]); };
+  }, [small]);
 
+  // ≤ 1023px: picking a step scrolls to the middle of that step's stretch of its section
+  const goStep = useCallback((idx, n) => {
+    const x = document.querySelectorAll('.f-slot')[idx]; const N = +x?.dataset.steps; if (!N) return;
+    const top = x.getBoundingClientRect().top + scrollY, range = x.offsetHeight - innerHeight;
+    scrollTo({ top: top + ((n + 0.5) / N) * range, behavior: 'smooth' });
+  }, []);
   // one gesture = one section, with a smooth push; nothing else scrolls
   const go = useCallback((i, fromGesture = false) => {
+    if (matchMedia(SMALL_Q).matches) {
+      document.querySelectorAll('.f-slot')[Math.max(0, Math.min(SECTIONS.length - 1, i))]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     if (busy.current) return;
     const d = Math.sign(i - curRef.current);
     // a gesture inside a section with its own steps moves those first
@@ -958,20 +991,31 @@ export default function App() {
     setTimeout(() => { busy.current = false; }, 1150);
   }, []);
   useEffect(() => {
-    if (modal || mobile || !ready) return;
+    if (!ready || small) return;                // ≤ 1023px: the page scrolls natively
     let acc = 0, last = 0;
+    const dialogOpen = () => !!document.querySelector('dialog[open]');
+    const typing = () => !!document.activeElement?.closest?.('input, textarea, select');
     const onWheel = (e) => {
+      if (dialogOpen()) return;
       e.preventDefault();
       const now = performance.now();
       if (now - last > 220) acc = 0;           // a new gesture
       last = now; acc += e.deltaY;
       if (Math.abs(acc) > 40) { go(curRef.current + (acc > 0 ? 1 : -1), true); acc = 0; }
     };
-    let ty = null;
-    const onTs = (e) => { ty = e.touches[0].clientY; };
-    const onTe = (e) => { if (ty == null) return; const dy = ty - e.changedTouches[0].clientY; if (Math.abs(dy) > 50) go(curRef.current + (dy > 0 ? 1 : -1), true); ty = null; };
+    // touch screens of 1024px and wider: a vertical swipe (50px, or a fast flick) moves one section, like one wheel gesture
+    let t0 = null;
+    const onTs = (e) => { const t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY, at: performance.now() }; };
+    const onTe = (e) => {
+      if (!t0 || dialogOpen() || typing()) { t0 = null; return; }
+      const t = e.changedTouches[0], dx = t0.x - t.clientX, dy = t0.y - t.clientY, ms = performance.now() - t0.at;
+      const flick = Math.abs(dy) > 20 && Math.abs(dy) / Math.max(ms, 1) > 0.5;
+      t0 = null;
+      if (Math.abs(dy) < Math.abs(dx) || (Math.abs(dy) <= 50 && !flick)) return;
+      go(curRef.current + (dy > 0 ? 1 : -1), true);
+    };
     const onKey = (e) => {
-      if (e.target.closest('input,textarea')) return;
+      if (e.target.closest('input,textarea') || dialogOpen()) return;
       if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(curRef.current + 1, true); }
       if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(curRef.current - 1, true); }
       if (e.key === 'Home') go(0); if (e.key === 'End') go(SECTIONS.length - 1);
@@ -980,42 +1024,39 @@ export default function App() {
     addEventListener('touchstart', onTs, { passive: true }); addEventListener('touchend', onTe, { passive: true });
     addEventListener('keydown', onKey);
     return () => { removeEventListener('wheel', onWheel); removeEventListener('touchstart', onTs); removeEventListener('touchend', onTe); removeEventListener('keydown', onKey); };
-  }, [go, modal, mobile, ready]);
-  useEffect(() => { document.documentElement.classList.toggle('is-f-m', mobile); }, [mobile]);
+  }, [go, ready, small]);
 
-  const join = () => setModal(true);
+  const openDownload = useDownload();
   const hidden = ready ? undefined : '';          // nothing behind the preloader can be reached
-  // phones scroll to a section; desktop slides to it
-  const goTo = useCallback((i) => {
-    if (!mobile) { go(i); return; }
-    document.getElementById(`m-${SECTIONS[Math.max(0, Math.min(SECTIONS.length - 1, i))][0]}`)?.scrollIntoView({ behavior: 'smooth' });
-  }, [mobile, go]);
+  const goTo = go;
   return (
     <MotionConfig reducedMotion="user">
-      <EveraHeader cur={cur} go={goTo} onJoin={join} logo={img['logo-wordmark']} inert={!ready} />
+      <EveraHeader cur={cur} go={goTo} onDownload={openDownload} logo={img['logo-wordmark']} inert={!ready} />
 
-      {mobile ? (
-        <main className="f-mpage" id="main" inert={hidden}>
-          {SECTIONS.map(([label, C]) => <MobileSection key={label} label={label} C={C} onJoin={join} ready={ready} go={(i) => document.getElementById(`m-${SECTIONS[Math.max(0, Math.min(SECTIONS.length - 1, i))][0]}`)?.scrollIntoView({ behavior: 'smooth' })} />)}
-        </main>
-      ) : (
       <main className="f-viewport" id="main" inert={hidden}>
-        <motion.div className="f-track" animate={{ y: `${-cur * 100}vh` }} transition={{ duration: 1.05, ease: PUSH }}>
-          {SECTIONS.map(([label, C], i) => (
-            <section key={label} className="f-slot" aria-label={label} aria-hidden={i !== cur} inert={i !== cur ? '' : undefined}>
-              <C on={ready && i === cur} go={go} onJoin={join} register={register} enteredFrom={entered} />
+        <motion.div className="f-track" animate={{ y: small ? '0%' : `${-cur * 100}%` }} transition={small ? { duration: 0 } : { duration: 1.05, ease: PUSH }}>
+          {SECTIONS.map(([label, C], i) => {
+            const off = !small && i !== cur;
+            return (
+            <section key={label} className={`f-slot ${STEP_N[label] ? 'f-slot--steps' : ''}`} aria-label={label} aria-hidden={off || undefined} inert={off ? '' : undefined}
+              data-steps={STEP_N[label] || undefined} style={STEP_N[label] ? { '--steps': STEP_N[label] } : undefined}>
+              <C on={ready && (small ? !!vis[i] : i === cur)} go={go} onDownload={openDownload} register={small ? null : register} enteredFrom={small ? -1 : entered}
+                scrollStep={small && STEP_N[label] ? (sstep[i] ?? 0) : null} pickStep={small && STEP_N[label] ? (n) => goStep(i, n) : null} />
             </section>
-          ))}
+            );
+          })}
         </motion.div>
       </main>
-      )}
 
       {/* left: progress; right: dots */}
       <div className="f-progress" aria-hidden="true"><span>{String(cur + 1).padStart(2, '0')}</span><i><motion.em animate={{ scaleY: (cur + 1) / SECTIONS.length }} transition={{ duration: 1, ease: PUSH }} /></i><span>{String(SECTIONS.length).padStart(2, '0')}</span></div>
       <nav className="f-dots" aria-label="Sections" inert={hidden}>{SECTIONS.map(([l], i) => <button key={l} onClick={() => go(i)} className={i === cur ? 'is-on' : ''} aria-label={l} aria-current={i === cur ? 'true' : undefined}><span>{l}</span></button>)}</nav>
-      <AnimatePresence>{ready && cur < SECTIONS.length - 1 && <motion.button className="f-next" onClick={() => go(cur + 1, true)} aria-label="Next section" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ArrowDown /></motion.button>}</AnimatePresence>
+      <AnimatePresence>{ready && cur < SECTIONS.length - 1 && <motion.button className={`f-next ${cur === 0 ? 'is-hero' : ''}`} onClick={() => go(cur + 1, true)} aria-label="Next section" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ArrowDown /></motion.button>}</AnimatePresence>
 
-      {modal && <WaitlistModal onClose={() => setModal(false)} />}
     </MotionConfig>
   );
+}
+
+export default function App() {
+  return <DownloadProvider><Site /></DownloadProvider>;
 }

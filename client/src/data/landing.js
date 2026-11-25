@@ -80,6 +80,11 @@ export const socials = [
   { name: 'LinkedIn', key: 'linkedin', href: 'https://www.linkedin.com/in/evera-ai-165b98395' },
 ];
 
+// The hero video. It is not in the project: it is streamed from this address (an MP4, H.264).
+// If the address changes, also update the allowed media origin in server/src/index.js and the preconnect in client/index.html.
+// The still shown before it plays (and used by the opening animation) is src/assets/video/evera-hero-poster.jpg: the video's first frame.
+export const heroVideo = 'https://media.everahealth.ai/everahealth.mp4';
+
 // The Evera app in the stores: the single source of truth for every download link and QR code
 export const appLinks = {
   ios: 'https://apps.apple.com/us/app/evera-ai/id6758142896',

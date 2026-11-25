@@ -26,7 +26,7 @@ const Roll = ({ children }) => (
   <span className="ev-roll"><span>{children}</span><span aria-hidden="true">{children}</span></span>
 );
 
-export default function EveraHeader({ cur, go, onDownload, logo, inert }) {
+export default function EveraHeader({ cur, go, onDownload, logo, inert, solid }) {
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [hover, setHover] = useState(null);         // the menu item under the pointer or focus
@@ -71,7 +71,7 @@ export default function EveraHeader({ cur, go, onDownload, logo, inert }) {
   const shut = `circle(0px at ${origin.x}px ${origin.y}px)`, full = `circle(${origin.r}px at ${origin.x}px ${origin.y}px)`;
 
   return (
-    <header className={`f-nav ev-nav ${open ? 'is-open' : ''}`} inert={inert ? '' : undefined}>
+    <header className={`f-nav ev-nav ${open ? 'is-open' : ''} ${solid ? 'is-solid' : ''}`} inert={inert ? '' : undefined}>
       <div className="ev-nav__bar">
         <button className="ev-nav__logo" onClick={() => pick(0)} aria-label="Evera home"><img src={logo} alt="EVERA" /></button>
         <div className="ev-nav__acts">

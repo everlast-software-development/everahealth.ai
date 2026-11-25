@@ -1,5 +1,11 @@
       (function () {
         var doc = document, html = doc.documentElement, el = doc.getElementById('ev-loader');
+        // The legal pages (src/legal/route.js) are plain documents: no loading animation, and their dark background from the first paint
+        if (/^\/(privacy-policy|terms-and-conditions)\/*$/.test(location.pathname)) {
+          html.classList.add('is-legal'); window.__evera = { loading: false };
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+          return;
+        }
         var cv = el.querySelector('canvas'), word = el.querySelector('.ev-l__word'), ctx = cv.getContext('2d');        var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
         var ev = window.__evera = window.__evera || {};
         var heroOk = false;

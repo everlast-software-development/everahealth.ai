@@ -15,7 +15,7 @@ evera-site/
 │     ├─ components/     ← waitlist pop-up, image components, social icons
 │     ├─ lib/            ← API calls, image loading, animation helpers
 │     ├─ styles/         ← base styles and the pop-up styles
-│     └─ assets/         ← images and the Evera video
+│     └─ assets/         ← images (the Evera video is streamed from a web address)
 └─ server/               ← the API (Express)
    ├─ src/index.js       ← server setup
    ├─ src/routes/        ← /api/waitlist, /api/contact, /api/newsletter
@@ -48,7 +48,8 @@ Then open **http://localhost:5173**. Changes you save appear in the browser stra
 | Hero text, section titles, layout of a section | `client/src/site/App.jsx` (each section is a function: `Hero`, `Care`, `About`, `Scan`, `Features`, `Analysis`, `Voices`, `Pricing`, `Contact`, `Final`) |
 | Colours, sizes, spacing | `client/src/site/site.css` (brand colours: `#0E0E25`, `#9259FF`, `#CAE751`, `#BCACFF`, `#5619CC`, `#2A0F4F`) |
 | Images | `client/src/assets/` (keep the same file names, or update the imports) |
-| The Evera video | `client/src/assets/video/evera-hero.mp4` and `.webm` |
+| The Evera video | It is streamed from a web address, not stored in the project: change `heroVideo` in `client/src/data/landing.js` (and the same address in `server/src/index.js` and `client/index.html`). If the new video starts on a different frame, replace `client/src/assets/video/evera-hero-poster.jpg` with its first frame. |
+| Privacy Policy and Terms & Conditions text | `client/src/data/legal.js` (layout: `client/src/legal/`) |
 | Section order | the `SECTIONS` list near the end of `client/src/site/App.jsx` |
 
 ## Form submissions
@@ -69,6 +70,6 @@ npm start          # one server on http://localhost:5000 serves the site and the
 
 ## Before going live
 
-- The Privacy and Terms links point to `#privacy` / `#terms`; add the real pages.
+- The Privacy Policy (`/privacy-policy`) and Terms & Conditions (`/terms-and-conditions`) pages are drafts: have a UAE lawyer review them, and check that the privacy policy matches what the app really collects.
 - Numbers shown inside example screens (markers, percentages) are illustrations; review them.
 - Medical wording should be reviewed by a doctor, and legal pages by a UAE lawyer.

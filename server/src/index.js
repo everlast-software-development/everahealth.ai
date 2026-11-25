@@ -22,6 +22,8 @@ app.use(helmet({
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
       'style-src': ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
       'font-src': ["'self'", 'https://fonts.gstatic.com'],
+      // the hero video is streamed from here (the address is in client/src/data/landing.js: heroVideo)
+      'media-src': ["'self'", 'https://media.everahealth.ai'],
     },
   },
 }));

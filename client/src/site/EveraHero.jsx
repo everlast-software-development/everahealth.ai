@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, Volume2, Square } from 'lucide-react';
-import videoMp4 from '../assets/video/evera-hero.mp4';
-import videoWebm from '../assets/video/evera-hero.webm';
 import poster from '../assets/video/evera-hero-poster.jpg';
+import { heroVideo } from '../data/landing.js';
 import { img } from '../lib/assets.js';
 import './hero.css';
 
@@ -244,7 +243,7 @@ export default function EveraHero({ on, onDownload, go }) {
     <div ref={rootRef} className={`f-sec h-pa ev-hero is-${mode}`}>
       <div className="ev-hero__stage" ref={stageRef}>
         <video ref={videoRef} className="ev-hero__video" poster={poster} muted playsInline loop preload="auto" aria-hidden="true">
-          <source src={videoMp4} type="video/mp4" /><source src={videoWebm} type="video/webm" />
+          <source src={heroVideo} type="video/mp4" />
         </video>
         <canvas ref={canvasRef} className="ev-hero__canvas" aria-hidden="true" />
       </div>

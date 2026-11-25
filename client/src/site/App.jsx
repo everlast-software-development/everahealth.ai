@@ -43,6 +43,57 @@ const Photo = ({ on, pos = '50% 25%', className = '' }) => (
     initial={false} animate={{ scale: on ? 1 : 1.12 }} transition={{ duration: 1.4, ease: E }} aria-hidden="true" />
 );
 
+/* ---------------- small-screen helpers ---------------- */
+const PHONE_Q = '(max-width: 767px)';
+function useMedia(q) {
+  const [m, setM] = useState(() => typeof window !== 'undefined' && matchMedia(q).matches);
+  useEffect(() => { const mq = matchMedia(q), f = () => setM(mq.matches); f(); mq.addEventListener('change', f); return () => mq.removeEventListener('change', f); }, [q]);
+  return m;
+}
+/* phones: a row of cards that scrolls sideways and snaps (CSS). Returns the card nearest the centre and a way to scroll to a card. */
+function useSnapRow(ref, active) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const el = ref.current; if (!el || !active) return undefined;
+    let raf = 0;
+    const read = () => {
+      raf = 0;
+      const box = el.getBoundingClientRect(), mid = box.left + box.width / 2; let best = 0, bd = Infinity;
+      [...el.children].forEach((c, k) => { const r = c.getBoundingClientRect(), d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = k; } });
+      setI(best);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(read); };
+    el.addEventListener('scroll', onScroll, { passive: true }); read();
+    return () => { el.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
+  }, [ref, active]);
+  const to = useCallback((k, smooth = true) => {
+    const el = ref.current, c = el?.children[k]; if (!c) return;
+    const box = el.getBoundingClientRect(), r = c.getBoundingClientRect();
+    el.scrollTo({ left: el.scrollLeft + r.left - box.left - (box.width - r.width) / 2, behavior: smooth ? 'smooth' : 'auto' });
+  }, [ref]);
+  return [i, to];
+}
+/* the pager under a swipe row (phones only; hidden elsewhere by CSS) */
+const SnapDots = ({ items, i, to, label }) => (
+  <div className="f-snapdots" role="group" aria-label={label}>
+    {items.map((x, k) => <button key={k} className={k === i ? 'is-on' : ''} onClick={() => to(k)} aria-label={x} aria-current={k === i ? 'true' : undefined} />)}
+  </div>
+);
+/* small screens: a sideways swipe on a step scene turns to the next / previous step (the scroll still does too) */
+function useSwipeSteps(enabled, iRef, pick) {
+  const t0 = useRef(null);
+  if (!enabled) return {};
+  return {
+    onTouchStart: (e) => { const t = e.touches[0]; t0.current = { x: t.clientX, y: t.clientY }; },
+    onTouchEnd: (e) => {
+      const s = t0.current; t0.current = null; if (!s) return;
+      const t = e.changedTouches[0], dx = t.clientX - s.x, dy = t.clientY - s.y;
+      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      pick(iRef.current + (dx < 0 ? 1 : -1));
+    },
+  };
+}
+
 /* ---------------- sections ---------------- */
 /* Home is EveraHero (./EveraHero.jsx) */
 
@@ -82,8 +133,9 @@ function CarePanels({ on, i }) {
 
 function Care({ on, register, enteredFrom, scrollStep, pickStep }) {
   const { i, dir, pick, iRef } = useSteps(on, register, enteredFrom, steps.length, scrollStep, pickStep);
+  const swipe = useSwipeSteps(scrollStep != null, iRef, pick);
   return (
-    <div className="f-sec f-care2">
+    <div className="f-sec f-care2" {...swipe}>
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
       <div className="f-fx__head">
         <Fade on={on} d={0.1} className="f-kicker" as="p">How Evera works</Fade>
@@ -100,6 +152,10 @@ const WhoImg = ({ on, className = '' }) => <div className={`f-who__img ${classNa
 
 /* 1 — bento */
 function WhoBento({ on }) {
+  // phones: the four cards are one row that swipes sideways under the image
+  const phone = useMedia(PHONE_Q);
+  const row = useRef(null);
+  const [card, toCard] = useSnapRow(row, phone);
   return (
     <div className="f-bento">
       <div className="f-bento__head">
@@ -116,12 +172,16 @@ function WhoBento({ on }) {
         <Fade on={on} d={0.25} className="f-bento__photo">
           <img src={whoFull} alt="The Evera app: health metrics, blood tests, body and skin analysis, calorie tracker, medical wallet and personalised plans" />
         </Fade>
-        {who.map((w, n) => (
-          <Fade key={w.title} on={on} d={0.3 + n * 0.08} className={`f-bento__t f-bento__w f-bento__w--${n}`}>
-            <span className="f-bento__n">0{n + 1}</span><h3>{w.title}</h3><p>{w.text}</p>
-          </Fade>
-        ))}
+        {/* (display: contents from 768px: the cards are placed straight on the grid above) */}
+        <div className="f-bento__cards" ref={row}>
+          {who.map((w, n) => (
+            <Fade key={w.title} on={on} d={0.3 + n * 0.08} className={`f-bento__t f-bento__w f-bento__w--${n}`}>
+              <span className="f-bento__n">0{n + 1}</span><h3>{w.title}</h3><p>{w.text}</p>
+            </Fade>
+          ))}
+        </div>
       </div>
+      <SnapDots items={who.map((w) => w.title)} i={card} to={toCard} label="About Evera" />
     </div>
   );
 }
@@ -272,8 +332,9 @@ function Wheel({ on, items, i, pick, aside }) {
 const FEAT_ITEMS = FEATS.map(([key, Art]) => ({ title: features[key].title, text: features[key].text, Art }));
 function Features({ on, register, enteredFrom, scrollStep, pickStep }) {
   const { i, dir, pick, iRef } = useSteps(on, register, enteredFrom, FEAT_ITEMS.length, scrollStep, pickStep);
+  const swipe = useSwipeSteps(scrollStep != null, iRef, pick);
   return (
-    <div className="f-sec f-fx">
+    <div className="f-sec f-fx" {...swipe}>
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
       <div className="f-fx__head">
         <Fade on={on} d={0.1} className="f-kicker" as="p">Features</Fade>
@@ -361,8 +422,9 @@ function Scan({ on, register, enteredFrom, scrollStep, pickStep }) {
   const c = CAPS[st];
   // ≤ 1023px (the scroll picks the step): one analysis card; the face and the text change together with a short fade
   const quick = scrollStep != null;
+  const swipe = useSwipeSteps(quick, steps4.iRef, pick);
   return (
-    <div className="f-sec f-sc" onMouseLeave={release}>
+    <div className="f-sec f-sc" onMouseLeave={release} {...swipe}>
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} />
       <div className="f-shade f-shade--deep" />
       <div className="f-sc__glow" aria-hidden="true" />
@@ -428,7 +490,7 @@ const NUM_DASH = 400;     // longer than any one glyph outline of the numerals, 
 const STARS = [0, 1, 2, 3, 4];
 const finePointer = () => typeof window !== 'undefined' && matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-function VoiceCard({ x, k, on, active, hold, run, reduced, tilt, pick }) {
+function VoiceCard({ x, k, on, active, hold, run, reduced, tilt, flat, pick }) {
   const rx = useSpring(0, { stiffness: 200, damping: 20 });
   const ry = useSpring(0, { stiffness: 200, damping: 20 });
   const base = 0.3 + k * 0.12;                 // when this card starts its entrance
@@ -444,7 +506,7 @@ function VoiceCard({ x, k, on, active, hold, run, reduced, tilt, pick }) {
     <motion.div className="f-tm__card" initial={false} animate={on ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{ duration: on ? 0.8 : 0.25, ease: E, delay: on ? base : 0 }}>
       <motion.figure className={`f-tm__item ${active ? 'is-on' : ''}`} tabIndex={0} style={tilt ? { rotateX: rx, rotateY: ry } : undefined}
-        initial={false} animate={{ y: active && !reduced ? -8 : 0 }} transition={{ duration: 0.5, ease: E }}
+        initial={false} animate={{ y: active && !reduced && !flat ? -8 : 0 }} transition={{ duration: 0.5, ease: E }}
         onPointerEnter={() => pick(k)} onPointerMove={move} onPointerLeave={leave} onFocus={() => pick(k)}>
         <svg className="f-tm__num" viewBox="0 0 74 60" aria-hidden="true">
           <motion.text x="1" y="54" strokeDasharray={NUM_DASH} initial={false} animate={{ strokeDashoffset: on || reduced ? 0 : NUM_DASH }}
@@ -491,15 +553,21 @@ function Voices({ on }) {
   const [run, setRun] = useState(0);          // restarts the progress line after a pause
   const resume = useRef(null);
   const tilt = !reduced && finePointer() && matchMedia('(min-width: 1024px)').matches;
+  // phones: the cards are one row that swipes sideways; the card in view is the active one, and the 5 s cycle
+  // scrolls the row to the next card (touching the row pauses it, as hovering does on desktop)
+  const phone = useMedia(PHONE_Q);
+  const list = useRef(null);
+  const [seen, toCard] = useSnapRow(list, phone);
+  useEffect(() => { if (phone) setAct(seen); }, [phone, seen]);
   // leaving the section resets it; the cycle only runs while it is on screen and not paused
-  useEffect(() => { if (!on) { clearTimeout(resume.current); setAct(0); setHold(false); } }, [on]);
+  useEffect(() => { if (!on) { clearTimeout(resume.current); if (!phone) setAct(0); setHold(false); } }, [on, phone]);
   useEffect(() => {
-    if (!on || hold) return;
-    const t = setTimeout(() => setAct((a) => (a + 1) % testimonials.length), VOICE_MS);
+    if (!on || hold || (phone && reduced)) return;
+    const t = setTimeout(() => { const n = (act + 1) % testimonials.length; if (phone) toCard(n); else setAct(n); }, VOICE_MS);
     return () => clearTimeout(t);
-  }, [on, hold, act, run]);
+  }, [on, hold, act, run, phone, reduced, toCard]);
   useEffect(() => () => clearTimeout(resume.current), []);
-  const pick = (k) => { clearTimeout(resume.current); setHold(true); setAct(k); };
+  const pick = (k) => { clearTimeout(resume.current); setHold(true); if (!phone) setAct(k); };
   const release = () => { clearTimeout(resume.current); resume.current = setTimeout(() => { setHold(false); setRun((r) => r + 1); }, 2000); };
   return (
     <div className="f-sec f-tm">
@@ -509,14 +577,15 @@ function Voices({ on }) {
             <Fade on={on} d={0.1} className="f-kicker" as="p">Testimonials</Fade>
             <h2 className="f-big f-big--l f-big--m"><Rise on={on} d={0.15}>Success stories from <span className="f-grad">happy clients</span></Rise></h2>
           </div>
-        <ol className="f-tm__list" aria-label="Client testimonials" onPointerLeave={release}
+        <ol ref={list} className="f-tm__list" aria-label="Client testimonials" onPointerLeave={release} onPointerCancel={release}
           onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) release(); }}>
           {testimonials.map((x, k) => (
             <li key={x.name}>
-              <VoiceCard x={x} k={k} on={on} active={act === k} hold={hold} run={run} reduced={reduced} tilt={tilt} pick={pick} />
+              <VoiceCard x={x} k={k} on={on} active={act === k} hold={hold} run={run} reduced={reduced} tilt={tilt} flat={phone} pick={pick} />
             </li>
           ))}
         </ol>
+        <SnapDots items={testimonials.map((x) => x.name)} i={seen} to={toCard} label="Testimonials" />
       </div>
     </div>
   );
@@ -549,6 +618,11 @@ function PlanCard({ p, yearly, onDownload }) {
 }
 function Pricing({ on, onDownload }) {
   const [yearly, setYearly] = useState(false);
+  // phones: the plans are one row that swipes sideways; it opens on the most popular plan, its neighbours peeking in
+  const phone = useMedia(PHONE_Q);
+  const row = useRef(null);
+  const [plan, toPlan] = useSnapRow(row, phone);
+  useEffect(() => { if (phone) toPlan(Math.max(0, plans.findIndex((p) => p.featured)), false); }, [phone, toPlan]);
   const seg = (
     <div className="f-pr__seg" role="radiogroup" aria-label="Billing period">
       {['Monthly', 'Yearly'].map((l) => { const sel = (l === 'Yearly') === yearly; return <button key={l} role="radio" aria-checked={sel} className={sel ? 'is-on' : ''} onClick={() => setYearly(l === 'Yearly')}>{sel && <motion.i layoutId="prseg" className="f-pr__pill" />}<span>{l}</span></button>; })}
@@ -564,9 +638,10 @@ function Pricing({ on, onDownload }) {
         </div>
         <Fade on={on} d={0.3}>{seg}</Fade>
       </div>
-      <div className="f-pr__row">
+      <div className="f-pr__row" ref={row}>
         {plans.map((p, k) => <Fade key={p.name} on={on} d={0.3 + k * 0.1} className="f-pr__cell"><PlanCard p={p} yearly={yearly} onDownload={onDownload} /></Fade>)}
       </div>
+      <SnapDots items={plans.map((p) => p.name)} i={plan} to={toPlan} label="Plans" />
     </div>
   );
 }
@@ -767,6 +842,13 @@ function Contact({ on }) {
       <h2 className="f-big f-ct__title"><Rise on={on} d={0.15}>Let’s get <span className="f-grad">in touch</span></Rise></h2>
     </div>
   );
+  // phones: one tap to call, and where Evera is, above the form
+  const quick = (
+    <Fade on={on} d={0.22} className="f-ct__quick">
+      <a href={contact.phoneHref}><i><Phone aria-hidden="true" /></i><span><small>Call us</small><b>{contact.phone}</b></span></a>
+      <p><i><MapPin aria-hidden="true" /></i><span><small>Find us</small><b>{contact.address}</b></span></p>
+    </Fade>
+  );
   const panel = (
     <Fade on={on} d={0.3} className="f-ct__panel">
       <AnimatePresence mode="wait" initial={false}>
@@ -809,7 +891,7 @@ function Contact({ on }) {
       <div className="f-bgimg" style={{ backgroundImage: `url(${bg})` }} /><div className="f-shade f-shade--deep" />
       <div className="f-ct__cols">
         <div className="f-ct__left">{globe}</div>
-        <div className="f-ct__right">{head}{panel}{follow}</div>
+        <div className="f-ct__right">{head}{quick}{panel}{follow}</div>
       </div>
     </div>
   );
@@ -834,8 +916,8 @@ function FootLinks({ go }) {
     <nav className="f-fo__links" aria-label="Legal" onMouseLeave={hide} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) hide(); }}>
       <motion.span className="f-fo__pill" aria-hidden="true" initial={false}
         animate={{ x: pill.x, width: pill.w, opacity: pill.on ? 1 : 0 }} transition={{ x: PILL_SPRING, width: PILL_SPRING, opacity: { duration: 0.2 } }} />
-      <a href="#privacy" onMouseEnter={show} onFocus={show}>Privacy</a>
-      <a href="#terms" onMouseEnter={show} onFocus={show}>Terms</a>
+      <a href="/privacy-policy" onMouseEnter={show} onFocus={show}>Privacy</a>
+      <a href="/terms-and-conditions" onMouseEnter={show} onFocus={show}>Terms</a>
       <button onClick={() => go?.(0)} onMouseEnter={show} onFocus={show}>Back to top ↑</button>
     </nav>
   );
@@ -927,6 +1009,7 @@ function Site() {
   const small = useSmallScreen();
   const [vis, setVis] = useState([]);           // ≤ 1023px: which sections are on screen
   const [sstep, setSstep] = useState({});       // ≤ 1023px: the step each step section's scroll has reached
+  const [stuck, setStuck] = useState(false);    // ≤ 1023px: the page has left its top, so the header gets its bar
   const [cur, setCur] = useState(0);
   // false while the preloader in index.html covers the page; it fires "evera:loaded" when it hands over
   const [ready, setReady] = useState(() => !window.__evera?.loading);
@@ -951,7 +1034,11 @@ function Site() {
     const io = new IntersectionObserver((es) => setVis((v) => { const n = [...v]; es.forEach((e) => { n[slots.indexOf(e.target)] = e.isIntersecting; }); return n; }),
       { rootMargin: '-10% 0px -20% 0px' });
     slots.forEach((x) => io.observe(x));
+    const root = document.documentElement;
     const onScroll = () => {
+      // the header: a bar once the page has left its top, with the reading progress along its lower edge
+      setStuck(scrollY > 24);
+      root.style.setProperty('--page-p', Math.min(1, Math.max(0, scrollY / Math.max(1, root.scrollHeight - innerHeight))).toFixed(4));
       const y = innerHeight * 0.4; const k = slots.findIndex((x) => { const b = x.getBoundingClientRect(); return b.top <= y && b.bottom > y; }); if (k >= 0 && k !== curRef.current) setCur(k);
       // a step section: its progress (0 at its top, 1 when its last screen is reached) picks the step
       setSstep((prev) => {
@@ -966,7 +1053,7 @@ function Site() {
       });
     };
     addEventListener('scroll', onScroll, { passive: true }); onScroll();
-    return () => { io.disconnect(); removeEventListener('scroll', onScroll); setVis([]); };
+    return () => { io.disconnect(); removeEventListener('scroll', onScroll); setVis([]); setStuck(false); };
   }, [small]);
 
   // ≤ 1023px: picking a step scrolls to the middle of that step's stretch of its section
@@ -1026,12 +1113,18 @@ function Site() {
     return () => { removeEventListener('wheel', onWheel); removeEventListener('touchstart', onTs); removeEventListener('touchend', onTe); removeEventListener('keydown', onKey); };
   }, [go, ready, small]);
 
+  // a link to /#contact (the legal pages use it) opens the site on its Contact section
+  useEffect(() => {
+    if (!ready || window.location.hash !== '#contact') return;
+    go(SECTIONS.findIndex(([l]) => l === 'Contact'));
+  }, [ready, go]);
+
   const openDownload = useDownload();
   const hidden = ready ? undefined : '';          // nothing behind the preloader can be reached
   const goTo = go;
   return (
     <MotionConfig reducedMotion="user">
-      <EveraHeader cur={cur} go={goTo} onDownload={openDownload} logo={img['logo-wordmark']} inert={!ready} />
+      <EveraHeader cur={cur} go={goTo} onDownload={openDownload} logo={img['logo-wordmark']} inert={!ready} solid={small && stuck} />
 
       <main className="f-viewport" id="main" inert={hidden}>
         <motion.div className="f-track" animate={{ y: small ? '0%' : `${-cur * 100}%` }} transition={small ? { duration: 0 } : { duration: 1.05, ease: PUSH }}>

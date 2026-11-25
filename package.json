@@ -6,7 +6,7 @@
   "scripts": {
     "setup": "npm install && npm install --prefix client && npm install --prefix server",
     "dev": "concurrently -n api,web -c magenta,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
-    "build": "npm run build --prefix client",
+    "build": "npm ci --prefix client --include=dev && npm ci --prefix server --omit=dev && npm run build --prefix client",
     "start": "npm start --prefix server"
   },
   "devDependencies": {
